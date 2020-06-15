@@ -61,3 +61,7 @@ By default, only `site_url` and `home` options are populated with `http://exampl
 If you want, you can add more options to be loaded by default. 
 
 Just declare a `dbless_default_options()` function in your bootstrap and make it return an array where the keys are option names and values, options values.
+
+## Example
+
+See a live example here -> https://github.com/Automattic/jetpack/pull/16163
