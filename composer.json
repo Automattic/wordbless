@@ -1,0 +1,20 @@
+{
+	"name": "leogermani/wordbless",
+	"description": "WorDBless allows you to use WordPress core functions in your PHPUnit tests without having to set up a database and the whole WordPress environment",
+	"type": "wordpress testing utility",
+	"require": {
+		"roots/wordpress": "^5.4"
+	},
+	"license": "GPL v3",
+	"authors": [
+		{
+			"name": "leogermani",
+			"email": "leogermani@gmail.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"WorDBless\\": "src/"
+		}
+	}
+}
