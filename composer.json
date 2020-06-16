@@ -1,7 +1,7 @@
 {
 	"name": "leogermani/wordbless",
 	"description": "WorDBless allows you to use WordPress core functions in your PHPUnit tests without having to set up a database and the whole WordPress environment",
-	"type": "wordpress testing utility",
+	"type": "wordpress-dropin",
 	"require": {
 		"roots/wordpress": "^5.4"
 	},
