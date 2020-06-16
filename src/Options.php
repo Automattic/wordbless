@@ -16,8 +16,8 @@ class Options {
 		wp_cache_flush();
 	}
 
-	public function init() {
-		if(self::$instance === null){
+	public static function init() {
+		if ( self::$instance === null ) {
 			self::$instance = new self;
 		}
 		return self::$instance;
