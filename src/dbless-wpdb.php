@@ -22,7 +22,7 @@ class Db_Less_wpdb extends wpdb {
 	}
 
 	function _real_escape( $string ) {
-		return $this->add_placeholder_escape( $string );
+		return $this->add_placeholder_escape( $escaped );
 	}
 
 	public function print_error( $str = '' ) {
@@ -42,7 +42,7 @@ class Db_Less_wpdb extends wpdb {
 	}
 
 	public function query( $query ) {
-		return array();
+		return true;
 	}
 
 	public function get_col_charset( $table, $column ) {
