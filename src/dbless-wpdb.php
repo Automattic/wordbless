@@ -42,7 +42,7 @@ class Db_Less_wpdb extends wpdb {
 	}
 
 	public function query( $query ) {
-		return array();
+		return true;
 	}
 
 	public function get_col_charset( $table, $column ) {
