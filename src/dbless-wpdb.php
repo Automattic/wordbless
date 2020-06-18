@@ -62,11 +62,11 @@ class Db_Less_wpdb extends wpdb {
 	}
 
 	public function has_cap( $db_cap ) {
-		return true;
+		return 1;
 	}
 
 	public function db_version() {
-		return 10;
+		return '10';
 	}
 }
 
