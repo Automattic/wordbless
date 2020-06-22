@@ -1,5 +1,5 @@
 {
-	"name": "leogermani/wordbless",
+	"name": "automattic/wordbless",
 	"description": "WorDBless allows you to use WordPress core functions in your PHPUnit tests without having to set up a database and the whole WordPress environment",
 	"type": "wordpress-dropin",
 	"require": {
@@ -8,8 +8,7 @@
 	"license": "GPL v3",
 	"authors": [
 		{
-			"name": "leogermani",
-			"email": "leogermani@gmail.com"
+			"name": "Automattic Inc.",
 		}
 	],
 	"autoload": {
