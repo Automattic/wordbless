@@ -3,6 +3,7 @@
 	"description": "WorDBless allows you to use WordPress core functions in your PHPUnit tests without having to set up a database and the whole WordPress environment",
 	"type": "wordpress-dropin",
 	"require": {
+		"php": ">=5.6.20",
 		"roots/wordpress": "^5.4"
 	},
 	"license": "GPL v3",
