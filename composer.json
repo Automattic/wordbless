@@ -8,7 +8,7 @@
 	"license": "GPL v3",
 	"authors": [
 		{
-			"name": "Automattic Inc.",
+			"name": "Automattic Inc."
 		}
 	],
 	"autoload": {
