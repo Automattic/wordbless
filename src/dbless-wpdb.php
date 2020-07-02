@@ -42,6 +42,7 @@ class Db_Less_wpdb extends wpdb {
 	}
 
 	public function query( $query ) {
+		$this->last_result = array( true );
 		return true;
 	}
 
