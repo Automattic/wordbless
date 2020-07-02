@@ -42,6 +42,23 @@ require_once __DIR__ . '/../vendor/autoload.php'; // adjust the path as needed
 
 That's it! You can now use WordPress core functions in your tests!
 
+### Writing tests
+
+Extend the `BaseTestCase` in order to have all the `setUp` and `tearDown`in place.
+
+```PHP
+class My_Tests extends \WorDBless\BaseTestCase {
+
+	public function test_add() {
+		add_option( 'test', 123 );
+		$this->assertEquals( 123, get_option( 'test' ) );
+	}
+
+}
+```
+
+If you choose not to extend this base class, no problem, just make sure to call its `setUp` and `tearDown` methods.
+
 ## What will work and what will not work?
 
 Disclaimer: This is still experimental, so all testing is very welcome.
