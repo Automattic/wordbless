@@ -3,18 +3,10 @@ WorDBless allows you to use WordPress core functions in your PHPUnit tests witho
 
 ## Usage
 
-### Require WorDBless:
-
-Since it's only hosted on github for now, first:
+### Require WorDBless
 
 ```
-composer config repositories.wordbless vcs https://github.com/leogermani/wordbless
-```
-
-Now require WorDBless
-
-```
-composer require leogermani/wordbless --dev
+composer require automattic/wordbless --dev
 ```
 
 ### Make sure to copy db.php
@@ -23,7 +15,7 @@ Add this script to your `composer.json`:
 
 ```
     "scripts": {
-        "post-update-cmd": "php -r \"copy('vendor/leogermani/wordbless/src/dbless-wpdb.php', 'wordpress/wp-content/db.php');\""
+        "post-update-cmd": "php -r \"copy('vendor/automattic/wordbless/src/dbless-wpdb.php', 'wordpress/wp-content/db.php');\""
     },
 ```
 
