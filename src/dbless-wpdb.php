@@ -10,6 +10,7 @@
 class Db_Less_Wpdb extends wpdb {
 
 	public function __construct() {
+		$this->insert_id ++;
 		return;
 	}
 
@@ -43,7 +44,8 @@ class Db_Less_Wpdb extends wpdb {
 
 	public function query( $query ) {
 		$this->last_result = array( true );
-		return true;
+		$this->insert_id ++;
+		return apply_filters( 'wordbless_wpdb_query', true, $query );
 	}
 
 	public function get_col_charset( $table, $column ) {

@@ -32,4 +32,13 @@ class Test_Options extends BaseTestCase {
 		$this->assertEquals( null, get_option( 'test' ) );
 	}
 
+	public function test_add_post() {
+		$id = wp_insert_post( array( 'post_title' => 'This is a post' ) );
+		//var_dump($id);
+		var_dump('ssss');
+		var_dump(wp_cache_get( $post_id, 'posts' ));
+		$post = get_post( $id );
+		$this->assertEquals( $id, $post->ID );
+	}
+
 }

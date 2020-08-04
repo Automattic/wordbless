@@ -13,7 +13,8 @@ class Options {
 		add_filter( 'update_option', array( $this, 'update_option' ), 10, 3 );
 		add_filter( 'add_option', array( $this, 'add_option' ), 10, 2 );
 		add_filter( 'deleted_option', array( $this, 'delete_option' ) );
-		wp_cache_flush();
+		$this->clear_cache_group();
+
 	}
 
 	public function clear_options() {
@@ -49,25 +50,34 @@ class Options {
 			$options,
 			$custom_defaults
 		);
-
-		wp_cache_flush();
+		$this->clear_cache_group();
 
 		return $all_options;
 	}
 
 	public function add_option( $option, $value ) {
 		$this->options[ $option ] = $value;
-		wp_cache_flush();
+		$this->clear_cache_group();
 	}
 
 	public function update_option( $option, $old_value, $value ) {
 		$this->options[ $option ] = $value;
-		wp_cache_flush();
+		$this->clear_cache_group();
 	}
 
 	public function delete_option( $option ) {
 		unset( $this->options[ $option ] );
-		wp_cache_flush();
+		$this->clear_cache_group();
+
+	}
+
+	public function clear_cache_group() {
+		global $wp_object_cache;
+
+		foreach ( array_keys( $wp_object_cache->cache['options'] ) as $key ) {
+			wp_cache_delete( $key, 'options' );
+		}
+
 	}
 
 }
