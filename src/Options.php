@@ -38,7 +38,7 @@ class Options {
 	 */
 	public function filter_query( $return, $query ) {
 		global $wpdb;
-		$pattern = "/^SELECT autoload FROM " . $wpdb->options . " WHERE option_name = [^ ]+$/";
+		$pattern = '/^SELECT autoload FROM ' . preg_quote( $wpdb->options ) . ' WHERE option_name = [^ ]+$/';
 		preg_match( $pattern, $query, $matches );
 		if( ! empty ( $matches ) ) {
 			return 'yes';
