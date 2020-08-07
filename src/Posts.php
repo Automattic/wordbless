@@ -11,12 +11,13 @@ class Posts {
 	private static $instance = null;
 
 	private function __construct() {
-		add_action( 'wp_insert_post', array( $this, 'pos_insert_post' ), 10, 3 );
+		//add_action( 'wp_insert_post', array( $this, 'pos_insert_post' ), 10, 3 );
 		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), 10, 3 );
 		add_filter( 'update_post_metadata_cache', '__return_true' );
 		add_filter( 'update_term_metadata_cache', '__return_true' );
 
 		add_filter( 'wordbless_wpdb_query', array( $this, 'filter_query' ), 10, 2 );
+		//add_filter( 'terms_pre_query', '__return_empty_array' );
 
 		wp_cache_flush();
 	}
@@ -33,12 +34,11 @@ class Posts {
 		$pattern = '/^SELECT \* FROM ' . $wpdb->posts . ' WHERE ID = (\d+) LIMIT 1$/';
 		preg_match( $pattern, $query, $matches );
 		if( ! empty ( $matches ) ) {
-			$post_id = $matches[1];
+			$post_id = (int) $matches[1];
 			if ( isset( $this->posts[ $post_id ] ) ) {
-				$return = $this->posts[ $post_id ]->to_array();
+				$return = $this->posts[ $post_id ];
 			}
 		}
-
 		return $return;
 	}
 
@@ -50,8 +50,8 @@ class Posts {
 		}
 
 		$_post = (object) sanitize_post( $data, 'raw' );
-		wp_cache_add( $post_ID, new \WP_Post( $_post ), 'posts' );
-		$this->posts[ $post_ID ] = new \WP_Post( $_post );
+		wp_cache_add( $post_ID, $_post, 'posts' );
+		$this->posts[ $post_ID ] = $_post;
 		return $data;
 	}
 

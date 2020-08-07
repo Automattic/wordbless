@@ -13,6 +13,8 @@ class Options {
 		add_filter( 'update_option', array( $this, 'update_option' ), 10, 3 );
 		add_filter( 'add_option', array( $this, 'add_option' ), 10, 2 );
 		add_filter( 'deleted_option', array( $this, 'delete_option' ) );
+
+		add_filter( 'wordbless_wpdb_query', array( $this, 'filter_query' ), 10, 2 );
 		$this->clear_cache_group();
 
 	}
@@ -27,6 +29,22 @@ class Options {
 		}
 		return self::$instance;
 	}
+	/**
+	 * Makes sure option is found when trying to delete it
+	 *
+	 * @param [type] $return
+	 * @param [type] $query
+	 * @return void
+	 */
+	public function filter_query( $return, $query ) {
+		global $wpdb;
+		$pattern = "/^SELECT autoload FROM " . $wpdb->options . " WHERE option_name = [^ ]+$/";
+		preg_match( $pattern, $query, $matches );
+		if( ! empty ( $matches ) ) {
+			return 'yes';
+		}
+		return $return;
+	}
 
 	public function get_default_options() {
 		return array(
@@ -38,6 +56,10 @@ class Options {
 	public function get_all_options( $options ) {
 
 		$defaults = $this->get_default_options();
+
+		if ( ! is_array( $options ) ) {
+			$options = array();
+		}
 
 		$custom_defaults = array();
 		if ( function_exists( '\dbless_default_options' ) ) {
