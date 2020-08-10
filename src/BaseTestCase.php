@@ -24,6 +24,7 @@ abstract class BaseTestCase extends TestCase {
 
 		$this->_restore_hooks();
 		Options::init()->clear_options();
+		Posts::init()->clear_all_posts();
 
 	}
 

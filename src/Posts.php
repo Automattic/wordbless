@@ -16,6 +16,8 @@ class Posts {
 		add_filter( 'update_post_metadata_cache', '__return_true' );
 		add_filter( 'update_term_metadata_cache', '__return_true' );
 
+		add_filter( 'delete_post', array( $this, 'delete_post' ) );
+
 		add_filter( 'wordbless_wpdb_query', array( $this, 'filter_query' ), 10, 2 );
 		//add_filter( 'terms_pre_query', '__return_empty_array' );
 
@@ -31,7 +33,7 @@ class Posts {
 
 	public function filter_query( $return, $query ) {
 		global $wpdb;
-		$pattern = '/^SELECT \* FROM ' . $wpdb->posts . ' WHERE ID = (\d+) LIMIT 1$/';
+		$pattern = '/^SELECT \* FROM ' . $wpdb->posts . ' WHERE ID = (\d+)( LIMIT 1)?$/';
 		preg_match( $pattern, $query, $matches );
 		if( ! empty ( $matches ) ) {
 			$post_id = (int) $matches[1];
@@ -43,11 +45,15 @@ class Posts {
 	}
 
 	public function insert_post( $data, $postarr, $unsanitized_postarr ) {
-		if ( ! isset( $data['ID'] ) ) {
+
+		if ( ! isset( $postarr['ID'] ) || empty( $postarr['ID'] ) || 0 === $postarr['ID'] ) {
 			$this->auto_increment ++;
 			$post_ID = $this->auto_increment;
-			$data['ID'] = $post_ID;
+		} else {
+			$post_ID = $postarr['ID'];
 		}
+
+		$data['ID'] = $post_ID;
 
 		$_post = (object) sanitize_post( $data, 'raw' );
 		wp_cache_add( $post_ID, $_post, 'posts' );
@@ -59,6 +65,15 @@ class Posts {
 		$this->posts[ $post_ID ] = $post;
 		$_post = sanitize_post( $post, 'raw' );
 		wp_cache_add( $_post->ID, $_post, 'posts' );
+	}
+
+	public function delete_post( $post_ID ) {
+		unset( $this->posts[ $post_ID ] );
+		wp_cache_delete( $post_ID, 'posts' );
+	}
+
+	public function clear_all_posts() {
+		$this->posts = array();
 	}
 
 

@@ -45,7 +45,7 @@ class Db_Less_Wpdb extends wpdb {
 	public function query( $query ) {
 		$query = apply_filters( 'wordbless_wpdb_query', false, $query );
 		$this->last_result = false === $query ? array() : array( $query );
-		$this->insert_id ++;
+		$this->insert_id  = \WorDBless\Posts::init()->auto_increment;
 		return true;
 	}
 
