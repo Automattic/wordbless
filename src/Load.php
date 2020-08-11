@@ -5,7 +5,7 @@ namespace WorDBless;
 class Load {
 
 	public static function load() {
-		if ( ! defined( 'ABSPATH') ) {
+		if ( ! defined( 'ABSPATH' ) ) {
 			define( 'ABSPATH', __DIR__ . '/../../../../wordpress/' );
 		}
 
