@@ -1,8 +1,13 @@
 {
 	"name": "automattic/wordbless",
-	"description": "WorDBless allows you to use WordPress core functions in your PHPUnit tests without having to set up a database and the whole WordPress environment",
 	"type": "wordpress-dropin",
+	"description": "WorDBless allows you to use WordPress core functions in your PHPUnit tests without having to set up a database and the whole WordPress environment",
 	"license": "GPL-2.0-or-later",
+	"authors": [
+		{
+			"name": "Automattic Inc."
+		}
+	],
 	"require": {
 		"php": ">=5.6.20",
 		"roots/wordpress": "^5.4"
@@ -10,17 +15,12 @@
 	"require-dev": {
 		"phpunit/phpunit": "^5.7 || ^6.5 || ^7.5"
 	},
-	"scripts": {
-		"post-update-cmd": "php -r \"copy('src/dbless-wpdb.php', 'wordpress/wp-content/db.php');\""
-	},
-	"authors": [
-		{
-			"name": "Automattic Inc."
-		}
-	],
 	"autoload": {
 		"psr-4": {
 			"WorDBless\\": "src/"
 		}
+	},
+	"scripts": {
+		"post-update-cmd": "php -r \"copy('src/dbless-wpdb.php', 'wordpress/wp-content/db.php');\""
 	}
 }
