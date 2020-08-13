@@ -55,7 +55,7 @@ jobs:
       - name: "Install phive from cache"
         run: |
           if [ ! -r "${HOME}/.phive/phive.phar" ]; then
-            mkdir -p ~/bin
+            mkdir -p "${HOME}/bin" "${HOME}/.phive"
             wget -O "${HOME}/.phive/phive.phar" "https://phar.io/releases/phive.phar"
             wget -O "${HOME}/.phive/phive.phar.asc" "https://phar.io/releases/phive.phar.asc"
             gpg --batch --keyserver ha.pool.sks-keyservers.net --keyserver-options timeout=10 --recv-keys 0x9D8A98B29B2D5D79
