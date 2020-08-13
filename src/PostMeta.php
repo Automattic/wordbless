@@ -15,8 +15,12 @@ class PostMeta {
 		$this->column = $this->meta_type . '_id';
 
 		add_filter( "add_{$this->meta_type}_metadata", array( $this, 'add' ), 10, 5 );
+
 		add_filter( "get_{$this->meta_type}_metadata", array( $this, 'get' ), 10, 4 );
 		add_filter( "get_{$this->meta_type}_metadata_by_mid", array( $this, 'get_by_mid' ), 10, 2 );
+
+		add_filter( "delete_{$this->meta_type}_metadata", array( $this, 'delete' ), 10, 5 );
+		add_filter( "delete_{$this->meta_type}_metadata_by_mid", array( $this, 'delete_by_mid' ), 10, 2 );
 
 	}
 
@@ -86,15 +90,84 @@ class PostMeta {
 		return $return;
 	}
 
-	public function get_by_mid( $return, $mid ) {
-		$return = false;
-		foreach ( $this->meta as $object_meta ) {
-			foreach ( $object_meta as $meta ) {
+	protected function find_by_mid( $mid ) {
+
+		foreach ( $this->meta as $object_id => $object_meta ) {
+			foreach ( $object_meta as $index => $meta ) {
 				if ( isset( $meta[ 'mid' ] ) && $mid === $meta[ 'mid' ] ) {
-					$return = maybe_unserialize( $meta['meta_value'] );
-					break;
+					return array(
+						'object_id' => $object_id,
+						'index'     => $index,
+						'value'     => $meta['meta_value']
+					);
 				}
 			}
+		}
+
+		return false;
+
+	}
+
+	public function get_by_mid( $return, $mid ) {
+		$return = false;
+		$meta = $this->find_by_mid( $mid );
+		if ( $meta ) {
+			$return = maybe_unserialize( $meta['value'] );
+		}
+		return $return;
+	}
+
+	public function delete( $return, $object_id, $meta_key, $meta_value, $delete_all ) {
+
+		$object_ids = $delete_all ? array_keys( $this->meta ) : array( $object_id );
+		$return     = false;
+
+		foreach( $object_ids as $id ) {
+			if ( $this->delete_for_object( $id, $meta_key, $meta_value ) ) {
+				$return = true;
+			}
+		}
+
+		return $return;
+
+	}
+
+	public function delete_for_object( $object_id, $meta_key, $meta_value ) {
+		if ( ! isset( $this->meta[ $object_id ] ) ) {
+			return false;
+		}
+
+		$meta_value          = maybe_serialize( $meta_value );
+		$consider_meta_value = '' !== $meta_value && null !== $meta_value && false !== $meta_value;
+		$found               = false;
+
+		foreach ( $this->meta[ $object_id ] as $index => $meta ) {
+			if (
+				isset( $meta['meta_key'] ) &&
+				$meta_key === $meta['meta_key'] &&
+				(
+					! $consider_meta_value ||
+					$meta_value === $meta['meta_value']
+				)
+			) {
+				unset( $this->meta[ $object_id ][$index] );
+				$found = true;
+			}
+		}
+
+		$this->meta[ $object_id ] = array_values( $this->meta[ $object_id ] );
+
+		return $found;
+
+	}
+
+	public function delete_by_mid( $return, $mid ) {
+		$return = false;
+		$meta = $this->find_by_mid( $mid );
+		if ( $meta ) {
+			unset( $this->meta[ $meta['object_id'] ][ $meta['index'] ] );
+			$this->meta[ $meta['object_id'] ] = array_values( $this->meta[ $meta['object_id'] ] );
+			$return = true;
 		}
 		return $return;
 	}

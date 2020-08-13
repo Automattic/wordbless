@@ -133,6 +133,83 @@ class Test_Posts extends BaseTestCase {
 		$post = get_post( $id );
 		$this->assertEquals( 'private', $post->post_status );
 
+	}
+
+	public function test_delete_post_meta() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+
+		add_post_meta( $id1, 'test', 'value-1' );
+
+		delete_post_meta( $id1, 'test' );
+
+		$this->assertEquals( [], get_post_meta( $id1, 'test' ) );
+
+	}
+
+	public function test_delete_post_meta_multiple() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+
+		add_post_meta( $id1, 'test', 'value-1' );
+		add_post_meta( $id1, 'test', 'value-2' );
+
+		delete_post_meta( $id1, 'test');
+
+		$this->assertEquals( [], get_post_meta( $id1, 'test' ) );
+
+	}
+
+	public function test_delete_post_meta_with_value() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+
+		add_post_meta( $id1, 'test', 'value-1' );
+		add_post_meta( $id1, 'test', 'value-2' );
+
+		delete_post_meta( $id1, 'test', 'value-1' );
+
+		$this->assertEquals( ['value-2'], get_post_meta( $id1, 'test' ) );
+
+	}
+
+	public function test_delete_post_meta_all_objects() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+		$id2 = wp_insert_post( array( 'post_title' => 'Post 2' ) );
+
+		add_post_meta( $id1, 'test', 'value-1' );
+		add_post_meta( $id1, 'test', 'value-2' );
+		add_post_meta( $id2, 'test', 'value-3' );
+
+		delete_metadata( 'post', $id1, 'test', '', true);
+
+		$this->assertEquals( [], get_post_meta( $id1, 'test' ) );
+		$this->assertEquals( [], get_post_meta( $id2, 'test' ) );
+
+	}
+
+	public function test_delete_post_meta_all_objects_with_value() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+		$id2 = wp_insert_post( array( 'post_title' => 'Post 2' ) );
+
+		add_post_meta( $id1, 'test', 'value-1' );
+		add_post_meta( $id1, 'test', 'value-2' );
+		add_post_meta( $id2, 'test', 'value-2' );
+		add_post_meta( $id2, 'test', 'value-3' );
+
+		delete_metadata( 'post', $id1, 'test', 'value-2', true);
+
+		$this->assertEquals( ['value-1'], get_post_meta( $id1, 'test' ) );
+		$this->assertEquals( ['value-3'], get_post_meta( $id2, 'test' ) );
+
+	}
+
+	public function test_delete_post_meta_by_mid() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+
+		add_post_meta( $id1, 'test', 'value-1' );
+		$mid = add_post_meta( $id1, 'test', 'value-2' );
+
+		delete_metadata_by_mid( 'post', $mid );
+
+		$this->assertEquals( ['value-1'], get_post_meta( $id1, 'test' ) );
 
 	}
 
