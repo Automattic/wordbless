@@ -68,7 +68,7 @@ jobs:
           fi
           install --verbose --mode=0755 -T "${HOME}/.phive/phive.phar" "${HOME}/bin/phive"
           echo "::add-path::${HOME}/bin"
-          phive install --trust-gpg-keys C00543248C87FB13,31C7E470E2138192
+          "${HOME}/bin/phive" install --trust-gpg-keys C00543248C87FB13,31C7E470E2138192
 
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v2.1.0"
