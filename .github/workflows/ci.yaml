@@ -198,13 +198,63 @@ jobs:
           - "7.4"
           - "7.3"
           - "7.2"
+
+        dependencies:
+          - "lowest"
+          - "locked"
+          - "highest"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2.3.2"
+
+      - name: "Install PHP with extensions"
+        uses: "shivammathur/setup-php@2.4.1"
+        with:
+          coverage: "none"
+          extensions: "${{ env.PHP_EXTENSIONS }}"
+          php-version: "${{ matrix.php-version }}"
+
+      - name: "Determine composer cache directory"
+        id: "determine-composer-cache-directory"
+        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+
+      - name: "Cache dependencies installed with composer"
+        uses: "actions/cache@v2.1.0"
+        with:
+          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
+          key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
+          restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
+
+      - name: "Install lowest dependencies from composer.json"
+        if: "matrix.dependencies == 'lowest'"
+        run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
+
+      - name: "Install locked dependencies from composer.lock"
+        if: "matrix.dependencies == 'locked'"
+        run: "composer install --no-interaction --no-progress --no-suggest"
+
+      - name: "Install highest dependencies from composer.json"
+        if: "matrix.dependencies == 'highest'"
+        run: "composer update --no-interaction --no-progress --no-suggest"
+
+      - name: "Run integration tests with phpunit/phpunit"
+        run: "cp -f src/dbless-wpdb.php wordpress/wp-content/db.php && vendor/bin/phpunit --colors=always"
+
+  tests-old:
+    name: "Tests on unsupported PHP"
+
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      matrix:
+        php-version:
           - "7.1"
           - "7.0"
           - "5.6"
 
         dependencies:
           - "lowest"
-          - "locked"
           - "highest"
 
     steps:
