@@ -76,4 +76,64 @@ class Test_Posts extends BaseTestCase {
 		$this->assertNull( get_post( $id3 ) );
 	}
 
+	public function test_add_get_post_meta() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+
+		$mid = add_post_meta( $id1, 'test', 'value-1' );
+		$this->assertIsInt( $mid );
+
+		$this->assertEquals( 'value-1', get_post_meta( $id1, 'test', true ) );
+		$this->assertEquals( array( 'value-1' ), get_post_meta( $id1, 'test' ) );
+	}
+
+	public function test_add_get_serialized_post_meta() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+
+		$mid = add_post_meta( $id1, 'test', array('value1', 'value2') );
+		$this->assertIsInt( $mid );
+
+		$this->assertEquals( array('value1', 'value2'), get_post_meta( $id1, 'test', true ) );
+		$this->assertEquals( array( array('value1', 'value2') ), get_post_meta( $id1, 'test' ) );
+	}
+
+	public function test_add_get_many_post_meta() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+
+		add_post_meta( $id1, 'test', 'value1' );
+		add_post_meta( $id1, 'test2', 'value2' );
+		add_post_meta( $id1, 'test2', 'value3' );
+
+		$this->assertEquals( 'value1', get_post_meta( $id1, 'test', true ) );
+
+		$this->assertEquals( array('value2', 'value3'), get_post_meta( $id1, 'test2' ) );
+	}
+
+	public function test_add_get_post_meta_by_mid() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+
+		$mid = add_post_meta( $id1, 'test', 'value-1' );
+		$this->assertIsInt( $mid );
+
+		$this->assertEquals( 'value-1', get_metadata_by_mid( 'post', $mid ) );
+	}
+
+	public function test_untrash_post() { // depends on post meta
+		$id = wp_insert_post( array( 'post_title' => 'This is a post', 'post_status' => 'private' ) );
+		$post = get_post( $id );
+		$this->assertEquals( $id, $post->ID );
+		$this->assertEquals( 'This is a post', $post->post_title );
+
+		wp_trash_post( $id );
+
+		$post = get_post( $id );
+		$this->assertEquals( 'trash', $post->post_status );
+
+		wp_untrash_post( $id );
+
+		$post = get_post( $id );
+		$this->assertEquals( 'private', $post->post_status );
+
+
+	}
+
 }

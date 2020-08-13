@@ -31,6 +31,7 @@ class Posts {
 
 	public function filter_query( $return, $query ) {
 		global $wpdb;
+		// this pattern is used in get_post() and in wp_delete_post().
 		$pattern = '/^SELECT \* FROM ' . $wpdb->posts . ' WHERE ID = (\d+)( LIMIT 1)?$/';
 		preg_match( $pattern, $query, $matches );
 		if( ! empty ( $matches ) ) {

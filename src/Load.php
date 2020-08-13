@@ -15,6 +15,7 @@ class Load {
 		require ABSPATH . '/wp-settings.php';
 		Options::init();
 		Posts::init();
+		PostMeta::init();
 	}
 
 }
