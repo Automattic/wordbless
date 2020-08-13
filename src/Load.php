@@ -10,6 +10,7 @@ class Load {
 		}
 
 		define( 'WP_REPAIRING', true ); // Will not try to install WordPress
+		define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
 
 		require ABSPATH . '/wp-settings.php';
 		Options::init();
