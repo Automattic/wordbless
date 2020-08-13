@@ -6,8 +6,6 @@ class Posts {
 
 	public $posts = array();
 
-	public $auto_increment = 0;
-
 	private static $instance = null;
 
 	private function __construct() {
@@ -47,8 +45,7 @@ class Posts {
 	public function insert_post( $data, $postarr, $unsanitized_postarr ) {
 
 		if ( ! isset( $postarr['ID'] ) || empty( $postarr['ID'] ) || 0 === $postarr['ID'] ) {
-			$this->auto_increment ++;
-			$post_ID = $this->auto_increment;
+			$post_ID = InsertId::bump_and_get();
 		} else {
 			$post_ID = $postarr['ID'];
 		}
