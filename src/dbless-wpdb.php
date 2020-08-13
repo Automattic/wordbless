@@ -7,7 +7,7 @@
  *
  * Place it under wp-content/db.php in your WP installation
  */
-class Db_Less_wpdb extends wpdb {
+class Db_Less_Wpdb extends wpdb {
 
 	public function __construct() {
 		return;
@@ -72,4 +72,4 @@ class Db_Less_wpdb extends wpdb {
 }
 
 global $wpdb;
-$wpdb = new Db_Less_wpdb();
+$wpdb = new Db_Less_Wpdb();

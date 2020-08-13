@@ -21,7 +21,7 @@ class Options {
 	}
 
 	public static function init() {
-		if ( self::$instance === null ) {
+		if ( null === self::$instance ) {
 			self::$instance = new self;
 		}
 		return self::$instance;
