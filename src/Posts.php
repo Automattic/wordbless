@@ -11,10 +11,11 @@ class Posts {
 	private function __construct() {
 		//add_action( 'wp_insert_post', array( $this, 'pos_insert_post' ), 10, 3 );
 		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), 10, 3 );
-		add_filter( 'update_post_metadata_cache', '__return_true' );
-		add_filter( 'update_term_metadata_cache', '__return_true' );
+		add_filter( 'wp_insert_attachment_data', array( $this, 'insert_post' ), 10, 3 );
+		// add_filter( 'update_post_metadata_cache', '__return_true' );
+		// add_filter( 'update_term_metadata_cache', '__return_true' );
 
-		add_filter( 'delete_post', array( $this, 'delete_post' ) );
+		add_action( 'delete_post', array( $this, 'delete_post' ) );
 
 		add_filter( 'wordbless_wpdb_query', array( $this, 'filter_query' ), 10, 2 );
 		//add_filter( 'terms_pre_query', '__return_empty_array' );
