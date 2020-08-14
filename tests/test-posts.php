@@ -213,4 +213,67 @@ class Test_Posts extends BaseTestCase {
 
 	}
 
+	public function test_update() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+
+		add_post_meta( $id1, 'test', 'value-1' );
+
+		$this->assertTrue( update_post_meta( $id1, 'test', 'value-2' ) );
+
+		$this->assertEquals( 'value-2', get_post_meta( $id1, 'test', true ) );
+	}
+
+	public function test_update_nonexisting_meta() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+
+		$this->assertTrue( update_post_meta( $id1, 'test', 'value-2' ) );
+
+		$this->assertEquals( 'value-2', get_post_meta( $id1, 'test', true ) );
+	}
+
+	public function test_update_post_meta_all_values() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+
+		add_post_meta( $id1, 'test', 'value-1' );
+		add_post_meta( $id1, 'test', 'value-2' );
+
+		update_post_meta( $id1, 'test', 'new-value');
+
+		$this->assertEquals( ['new-value', 'new-value'], get_post_meta( $id1, 'test' ) );
+
+	}
+
+	public function test_update_post_meta_with_prev_value() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+
+		add_post_meta( $id1, 'test', 'value-1' );
+		add_post_meta( $id1, 'test', 'value-2' );
+
+		update_post_meta( $id1, 'test', 'new-value', 'value-1' );
+
+		$this->assertEquals( ['new-value', 'value-2'], get_post_meta( $id1, 'test' ) );
+
+	}
+
+	public function test_update_post_meta_by_mid() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+
+		$mid = add_post_meta( $id1, 'test', 'value-1' );
+
+		update_metadata_by_mid( 'post', $mid, 'new-value' );
+
+		$this->assertEquals( 'new-value', get_post_meta( $id1, 'test', true ) );
+	}
+
+	public function test_update_post_meta_by_mid_with_new_key() {
+		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+
+		$mid = add_post_meta( $id1, 'test', 'value-1' );
+
+		update_metadata_by_mid( 'post', $mid, 'new-value', 'new-key' );
+
+		$this->assertEquals( 'new-value', get_post_meta( $id1, 'new-key', true ) );
+		$this->assertEmpty( get_post_meta( $id1, 'test', true ) );
+	}
+
 }

@@ -22,6 +22,9 @@ class PostMeta {
 		add_filter( "delete_{$this->meta_type}_metadata", array( $this, 'delete' ), 10, 5 );
 		add_filter( "delete_{$this->meta_type}_metadata_by_mid", array( $this, 'delete_by_mid' ), 10, 2 );
 
+		add_filter( "update_{$this->meta_type}_metadata", array( $this, 'update' ), 10, 5 );
+		add_filter( "update_{$this->meta_type}_metadata_by_mid", array( $this, 'update_by_mid' ), 10, 4 );
+
 	}
 
 	public static function init() {
@@ -98,7 +101,8 @@ class PostMeta {
 					return array(
 						'object_id' => $object_id,
 						'index'     => $index,
-						'value'     => $meta['meta_value']
+						'key'       => $meta['meta_key'],
+						'value'     => $meta['meta_value'],
 					);
 				}
 			}
@@ -170,6 +174,102 @@ class PostMeta {
 			$return = true;
 		}
 		return $return;
+	}
+
+	public function update( $return, $object_id, $meta_key, $meta_value, $prev_value ) {
+
+		if ( ! $this->key_exists_for_object( $meta_key, $object_id ) ) {
+			// todo: in the original method, raw values are passade to add_metadata. The values below have been through wp_unslash.
+			return add_metadata( $this->meta_type, $object_id, $meta_key, $meta_value );
+		}
+
+		// Compare existing value to new value if no prev value given and the key exists only once.
+		if ( empty( $prev_value ) ) {
+			$old_value = get_metadata( $this->meta_type, $object_id, $meta_key );
+			if ( count( $old_value ) == 1 ) {
+				if ( $old_value[0] === $meta_value ) {
+					return false;
+				}
+			}
+		}
+
+		$_meta_value = $meta_value;
+		$meta_value  = maybe_serialize( $meta_value );
+
+		$consider_meta_value = '' !== $prev_value && null !== $prev_value && false !== $prev_value;
+
+		$return = false;
+
+		foreach ( $this->meta[ $object_id ] as $index => $meta ) {
+			if (
+				isset( $meta['meta_key'] ) &&
+				$meta_key === $meta['meta_key'] &&
+				(
+					! $consider_meta_value ||
+					$prev_value === $meta['meta_value']
+				)
+			) {
+
+				do_action( "update_{$this->meta_type}_meta", $meta['mid'], $object_id, $meta_key, $_meta_value );
+				if ( 'post' == $this->meta_type ) {
+					do_action( 'update_postmeta', $meta['mid'], $object_id, $meta_key, $meta_value );
+				}
+
+				$this->meta[ $object_id ][$index]['meta_value'] = $meta_value;
+
+				do_action( "updated_{$this->meta_type}_meta", $meta['mid'], $object_id, $meta_key, $_meta_value );
+				if ( 'post' == $this->meta_type ) {
+					do_action( 'updated_postmeta', $meta['mid'], $object_id, $meta_key, $meta_value );
+				}
+
+				$return = true;
+			}
+		}
+
+		return $return;
+
+	}
+
+	public function update_by_mid( $return, $mid, $meta_value, $meta_key ) {
+		$return = false;
+		$meta = $this->find_by_mid( $mid );
+		if ( $meta ) {
+
+			$meta_subtype = get_object_subtype( $this->meta_type, $meta['object_id'] );
+			$_meta_value  = $meta_value;
+			$meta_value   = sanitize_meta( $meta_key, $meta_value, $this->meta_type, $meta_subtype );
+			$meta_value   = maybe_serialize( $meta_value );
+			$new_key      = false === $meta_key ? $meta['key'] : $meta_key;
+
+			/** This action is documented in wp-includes/meta.php */
+			do_action( "update_{$this->meta_type}_meta", $mid, $meta['object_id'], $meta_key, $_meta_value );
+
+			if ( 'post' == $this->meta_type ) {
+				/** This action is documented in wp-includes/meta.php */
+				do_action( 'update_postmeta', $mid, $meta['object_id'], $meta_key, $meta_value );
+			}
+
+			$this->meta[ $meta['object_id'] ][ $meta['index'] ] = array(
+				'mid'        => $mid,
+				'meta_key'   => $new_key,
+				'meta_value' => $meta_value,
+			);
+
+			/** This action is documented in wp-includes/meta.php */
+			do_action( "updated_{$this->meta_type}_meta", $mid, $meta['object_id'], $meta_key, $_meta_value );
+
+			if ( 'post' == $this->meta_type ) {
+				/** This action is documented in wp-includes/meta.php */
+				do_action( 'updated_postmeta', $mid, $meta['object_id'], $meta_key, $meta_value );
+			}
+
+			$return = true;
+		}
+		return $return;
+	}
+
+	public function clear_all_meta() {
+		$this->meta = array();
 	}
 
 }
