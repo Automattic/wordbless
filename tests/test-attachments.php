@@ -34,7 +34,7 @@ class Test_Attachments extends BaseTestCase {
 	}
 
 	public function test_add_attachment() {
-		$id = $this->create_upload_object( TESTSPATH . '/wp-icon.png' );
+		$id = $this->create_upload_object( TESTSPATH . '/wp-logo.jpg' );
 		$this->assertIsInt( $id );
 		$attachment = get_post( $id );
 		$this->assertEquals( 'attachment', $attachment->post_type );
@@ -43,7 +43,7 @@ class Test_Attachments extends BaseTestCase {
 	public function test_add_attachment_with_parent() {
 		$id = wp_insert_post( array( 'post_title' => 'Post 1' ) );
 
-		$attachment_id = $this->create_upload_object( TESTSPATH . '/wp-icon.png', $id );
+		$attachment_id = $this->create_upload_object( TESTSPATH . '/wp-logo.jpg', $id );
 
 		$attachment = get_post( $attachment_id );
 

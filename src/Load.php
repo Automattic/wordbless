@@ -13,6 +13,11 @@ class Load {
 		define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
 
 		require ABSPATH . '/wp-settings.php';
+		require_once ABSPATH . 'wp-admin/includes/admin.php';
+		if ( ! file_exists( ABSPATH . 'wp-content/uploads' ) ) {
+			mkdir( ABSPATH . 'wp-content/uploads' );
+		}
+
 		Options::init();
 		Posts::init();
 		PostMeta::init();
