@@ -13,8 +13,9 @@ class Test_Attachments extends BaseTestCase {
 			$type = $upload['type'];
 		} else {
 			$mime = wp_check_filetype( $upload['file'], null );
-			if ($mime)
+			if ($mime) {
 				$type = $mime['type'];
+			}
 		}
 
 		$attachment = array(

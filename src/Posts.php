@@ -30,18 +30,17 @@ class Posts {
 		return self::$instance;
 	}
 
-	public function filter_query( $return, $query ) {
+	public function filter_query( $query_results, $query ) {
 		global $wpdb;
 		// this pattern is used in get_post() and in wp_delete_post().
-		$pattern = '/^SELECT \* FROM ' . $wpdb->posts . ' WHERE ID = (\d+)( LIMIT 1)?$/';
-		preg_match( $pattern, $query, $matches );
-		if( ! empty ( $matches ) ) {
+		$pattern = '/^SELECT \* FROM ' . preg_quote( $wpdb->posts ) . ' WHERE ID = (\d+)( LIMIT 1)?$/';
+		if( 1 === preg_match( $pattern, $query, $matches ) ) {
 			$post_id = (int) $matches[1];
 			if ( isset( $this->posts[ $post_id ] ) ) {
-				$return = $this->posts[ $post_id ];
+				return array( $this->posts[ $post_id ] );
 			}
 		}
-		return $return;
+		return $query_results;
 	}
 
 	public function insert_post( $data, $postarr, $unsanitized_postarr ) {

@@ -52,7 +52,9 @@ abstract class BaseTestCase extends TestCase {
 
 		if ( is_file( $file ) ) {
 			return unlink( $file );
-		} elseif ( is_dir( $file ) ) {
+		}
+
+		if ( is_dir( $file ) ) {
 
 			$scan = glob(rtrim($file, '/').'/*');
 

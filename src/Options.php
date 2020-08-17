@@ -32,18 +32,17 @@ class Options {
 	/**
 	 * Makes sure option is found when trying to delete it
 	 *
-	 * @param [type] $return
+	 * @param [type] $query_results
 	 * @param [type] $query
 	 * @return void
 	 */
-	public function filter_query( $return, $query ) {
+	public function filter_query( $query_results, $query ) {
 		global $wpdb;
 		$pattern = '/^SELECT autoload FROM ' . preg_quote( $wpdb->options ) . ' WHERE option_name = [^ ]+$/';
-		preg_match( $pattern, $query, $matches );
-		if( ! empty ( $matches ) ) {
-			return 'yes';
+		if( 1 === preg_match( $pattern, $query, $matches ) ) {
+			return array( 'yes' );
 		}
-		return $return;
+		return $query_results;
 	}
 
 	public function get_default_options() {

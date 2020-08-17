@@ -49,7 +49,7 @@ class PostMeta {
 
 	}
 
-	public function add( $return, $object_id, $meta_key, $meta_value, $unique ) {
+	public function add( $filterable, $object_id, $meta_key, $meta_value, $unique ) {
 
 		if ( $unique && $this->key_exists_for_object( $meta_key, $object_id ) ) {
 			return false;
@@ -78,19 +78,19 @@ class PostMeta {
 
 	}
 
-	public function get( $return, $object_id, $meta_key, $single ) {
-		$return = array();
+	public function get( $filterable, $object_id, $meta_key, $single ) {
+		$filterable = array();
 		if ( isset( $this->meta[ $object_id ] ) ) {
 			foreach ( $this->meta[ $object_id ] as $meta ) {
 				if ( isset( $meta[ 'meta_key' ] ) && $meta_key === $meta[ 'meta_key' ] ) {
-					$return[] = maybe_unserialize( $meta['meta_value'] );
+					$filterable[] = maybe_unserialize( $meta['meta_value'] );
 					if ( $single ) {
 						break;
 					}
 				}
 			}
 		}
-		return $return;
+		return $filterable;
 	}
 
 	protected function find_by_mid( $mid ) {
@@ -112,27 +112,27 @@ class PostMeta {
 
 	}
 
-	public function get_by_mid( $return, $mid ) {
-		$return = false;
+	public function get_by_mid( $filterable, $mid ) {
+		$filterable = false;
 		$meta = $this->find_by_mid( $mid );
 		if ( $meta ) {
-			$return = maybe_unserialize( $meta['value'] );
+			$filterable = maybe_unserialize( $meta['value'] );
 		}
-		return $return;
+		return $filterable;
 	}
 
-	public function delete( $return, $object_id, $meta_key, $meta_value, $delete_all ) {
+	public function delete( $filterable, $object_id, $meta_key, $meta_value, $delete_all ) {
 
 		$object_ids = $delete_all ? array_keys( $this->meta ) : array( $object_id );
-		$return     = false;
+		$filterable     = false;
 
 		foreach( $object_ids as $id ) {
 			if ( $this->delete_for_object( $id, $meta_key, $meta_value ) ) {
-				$return = true;
+				$filterable = true;
 			}
 		}
 
-		return $return;
+		return $filterable;
 
 	}
 
@@ -165,18 +165,18 @@ class PostMeta {
 
 	}
 
-	public function delete_by_mid( $return, $mid ) {
-		$return = false;
+	public function delete_by_mid( $filterable, $mid ) {
+		$filterable = false;
 		$meta = $this->find_by_mid( $mid );
 		if ( $meta ) {
 			unset( $this->meta[ $meta['object_id'] ][ $meta['index'] ] );
 			$this->meta[ $meta['object_id'] ] = array_values( $this->meta[ $meta['object_id'] ] );
-			$return = true;
+			$filterable = true;
 		}
-		return $return;
+		return $filterable;
 	}
 
-	public function update( $return, $object_id, $meta_key, $meta_value, $prev_value ) {
+	public function update( $filterable, $object_id, $meta_key, $meta_value, $prev_value ) {
 
 		if ( ! $this->key_exists_for_object( $meta_key, $object_id ) ) {
 			// todo: in the original method, raw values are passade to add_metadata. The values below have been through wp_unslash.
@@ -198,7 +198,7 @@ class PostMeta {
 
 		$consider_meta_value = '' !== $prev_value && null !== $prev_value && false !== $prev_value;
 
-		$return = false;
+		$filterable = false;
 
 		foreach ( $this->meta[ $object_id ] as $index => $meta ) {
 			if (
@@ -222,16 +222,16 @@ class PostMeta {
 					do_action( 'updated_postmeta', $meta['mid'], $object_id, $meta_key, $meta_value );
 				}
 
-				$return = true;
+				$filterable = true;
 			}
 		}
 
-		return $return;
+		return $filterable;
 
 	}
 
-	public function update_by_mid( $return, $mid, $meta_value, $meta_key ) {
-		$return = false;
+	public function update_by_mid( $filterable, $mid, $meta_value, $meta_key ) {
+		$filterable = false;
 		$meta = $this->find_by_mid( $mid );
 		if ( $meta ) {
 
@@ -263,9 +263,9 @@ class PostMeta {
 				do_action( 'updated_postmeta', $mid, $meta['object_id'], $meta_key, $meta_value );
 			}
 
-			$return = true;
+			$filterable = true;
 		}
-		return $return;
+		return $filterable;
 	}
 
 	public function clear_all_meta() {
