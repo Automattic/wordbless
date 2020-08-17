@@ -2,11 +2,19 @@
 
 namespace WorDBless;
 
+/**
+ * Implements support to Options
+ */
 class Options {
 
-	public $options = array();
+	use Singleton;
 
-	private static $instance = null;
+	/**
+	 * Holds the stored options
+	 *
+	 * @var array
+	 */
+	public $options = array();
 
 	private function __construct() {
 		add_filter( 'alloptions', array( $this, 'get_all_options' ), 10 );
@@ -14,26 +22,25 @@ class Options {
 		add_filter( 'add_option', array( $this, 'add_option' ), 10, 2 );
 		add_filter( 'deleted_option', array( $this, 'delete_option' ) );
 
-		add_filter( 'wordbless_wpdb_query', array( $this, 'filter_query' ), 10, 2 );
+		add_filter( 'wordbless_wpdb_query_results', array( $this, 'filter_query' ), 10, 2 );
 		$this->clear_cache_group();
 
 	}
 
+	/**
+	 * Clear all stored options
+	 *
+	 * @return void
+	 */
 	public function clear_options() {
 		$this->options = array();
 	}
 
-	public static function init() {
-		if ( null === self::$instance ) {
-			self::$instance = new self;
-		}
-		return self::$instance;
-	}
 	/**
 	 * Makes sure option is found when trying to delete it
 	 *
-	 * @param [type] $query_results
-	 * @param [type] $query
+	 * @param array  $query_results
+	 * @param string $query
 	 * @return void
 	 */
 	public function filter_query( $query_results, $query ) {
@@ -45,6 +52,11 @@ class Options {
 		return $query_results;
 	}
 
+	/**
+	 * Gets the default options, always present
+	 *
+	 * @return array
+	 */
 	public function get_default_options() {
 		return array(
 			'site_url' => 'http://example.org',
@@ -52,6 +64,12 @@ class Options {
 		);
 	}
 
+	/**
+	 * Filters alloptions
+	 *
+	 * @param array $options
+	 * @return array
+	 */
 	public function get_all_options( $options ) {
 
 		$defaults = $this->get_default_options();
@@ -92,6 +110,11 @@ class Options {
 
 	}
 
+	/**
+	 * Clears the cache for the 'options' group
+	 *
+	 * @return void
+	 */
 	public function clear_cache_group() {
 		global $wp_object_cache;
 

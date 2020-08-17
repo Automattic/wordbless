@@ -4,11 +4,11 @@ namespace WorDBless;
 
 class PostMeta {
 
+	use Singleton;
+
 	public $meta = array();
 
 	public $meta_type = 'post'; // Let's prepare for a future abstraction and use a super class to handle all types of metadata
-
-	private static $instance = null;
 
 	private function __construct() {
 
@@ -27,13 +27,6 @@ class PostMeta {
 
 	}
 
-	public static function init() {
-		if ( self::$instance === null ) {
-			self::$instance = new self;
-		}
-		return self::$instance;
-	}
-
 	public function key_exists_for_object( $meta_key, $object_id ) {
 		if ( ! isset( $this->meta[ $object_id ] ) ) {
 			return false;
@@ -49,7 +42,7 @@ class PostMeta {
 
 	}
 
-	public function add( $filterable, $object_id, $meta_key, $meta_value, $unique ) {
+	public function add( $check, $object_id, $meta_key, $meta_value, $unique ) {
 
 		if ( $unique && $this->key_exists_for_object( $meta_key, $object_id ) ) {
 			return false;
@@ -78,19 +71,19 @@ class PostMeta {
 
 	}
 
-	public function get( $filterable, $object_id, $meta_key, $single ) {
-		$filterable = array();
+	public function get( $check, $object_id, $meta_key, $single ) {
+		$check = array();
 		if ( isset( $this->meta[ $object_id ] ) ) {
 			foreach ( $this->meta[ $object_id ] as $meta ) {
 				if ( isset( $meta[ 'meta_key' ] ) && $meta_key === $meta[ 'meta_key' ] ) {
-					$filterable[] = maybe_unserialize( $meta['meta_value'] );
+					$check[] = maybe_unserialize( $meta['meta_value'] );
 					if ( $single ) {
 						break;
 					}
 				}
 			}
 		}
-		return $filterable;
+		return $check;
 	}
 
 	protected function find_by_mid( $mid ) {
@@ -112,27 +105,27 @@ class PostMeta {
 
 	}
 
-	public function get_by_mid( $filterable, $mid ) {
-		$filterable = false;
+	public function get_by_mid( $check, $mid ) {
+		$check = false;
 		$meta = $this->find_by_mid( $mid );
 		if ( $meta ) {
-			$filterable = maybe_unserialize( $meta['value'] );
+			$check = maybe_unserialize( $meta['value'] );
 		}
-		return $filterable;
+		return $check;
 	}
 
-	public function delete( $filterable, $object_id, $meta_key, $meta_value, $delete_all ) {
+	public function delete( $check, $object_id, $meta_key, $meta_value, $delete_all ) {
 
 		$object_ids = $delete_all ? array_keys( $this->meta ) : array( $object_id );
-		$filterable     = false;
+		$check     = false;
 
 		foreach( $object_ids as $id ) {
 			if ( $this->delete_for_object( $id, $meta_key, $meta_value ) ) {
-				$filterable = true;
+				$check = true;
 			}
 		}
 
-		return $filterable;
+		return $check;
 
 	}
 
@@ -165,18 +158,18 @@ class PostMeta {
 
 	}
 
-	public function delete_by_mid( $filterable, $mid ) {
-		$filterable = false;
+	public function delete_by_mid( $check, $mid ) {
+		$check = false;
 		$meta = $this->find_by_mid( $mid );
 		if ( $meta ) {
 			unset( $this->meta[ $meta['object_id'] ][ $meta['index'] ] );
 			$this->meta[ $meta['object_id'] ] = array_values( $this->meta[ $meta['object_id'] ] );
-			$filterable = true;
+			$check = true;
 		}
-		return $filterable;
+		return $check;
 	}
 
-	public function update( $filterable, $object_id, $meta_key, $meta_value, $prev_value ) {
+	public function update( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
 
 		if ( ! $this->key_exists_for_object( $meta_key, $object_id ) ) {
 			// todo: in the original method, raw values are passade to add_metadata. The values below have been through wp_unslash.
@@ -198,7 +191,7 @@ class PostMeta {
 
 		$consider_meta_value = '' !== $prev_value && null !== $prev_value && false !== $prev_value;
 
-		$filterable = false;
+		$check = false;
 
 		foreach ( $this->meta[ $object_id ] as $index => $meta ) {
 			if (
@@ -222,16 +215,16 @@ class PostMeta {
 					do_action( 'updated_postmeta', $meta['mid'], $object_id, $meta_key, $meta_value );
 				}
 
-				$filterable = true;
+				$check = true;
 			}
 		}
 
-		return $filterable;
+		return $check;
 
 	}
 
-	public function update_by_mid( $filterable, $mid, $meta_value, $meta_key ) {
-		$filterable = false;
+	public function update_by_mid( $check, $mid, $meta_value, $meta_key ) {
+		$check = false;
 		$meta = $this->find_by_mid( $mid );
 		if ( $meta ) {
 
@@ -263,9 +256,9 @@ class PostMeta {
 				do_action( 'updated_postmeta', $mid, $meta['object_id'], $meta_key, $meta_value );
 			}
 
-			$filterable = true;
+			$check = true;
 		}
-		return $filterable;
+		return $check;
 	}
 
 	public function clear_all_meta() {

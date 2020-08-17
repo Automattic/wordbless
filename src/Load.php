@@ -2,8 +2,16 @@
 
 namespace WorDBless;
 
+/**
+ * Loads WorDBless
+ */
 class Load {
 
+	/**
+	 * Loads WorDBless and initializes its modules
+	 *
+	 * @return void
+	 */
 	public static function load() {
 		if ( ! defined( 'ABSPATH' ) ) {
 			define( 'ABSPATH', __DIR__ . '/../../../../wordpress/' );

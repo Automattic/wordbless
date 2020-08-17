@@ -43,7 +43,19 @@ class Db_Less_Wpdb extends wpdb {
 	}
 
 	public function query( $query ) {
-		$this->last_result = apply_filters( 'wordbless_wpdb_query', array(), $query );
+
+		/**
+		 * Filters the result of the query
+		 *
+		 * @param array  $query_results The results of the query. Must be an array. Default is an empty array
+		 * @param string $query The SQL query
+		 */
+		$result = apply_filters( 'wordbless_wpdb_query_results', array(), $query );
+		if ( ! is_array( $result ) ) {
+			$result = array();
+		}
+		$this->last_result = $result;
+
 		$this->insert_id  = \WorDBless\InsertId::$id;
 		return true;
 	}
