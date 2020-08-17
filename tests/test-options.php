@@ -26,10 +26,10 @@ class Test_Options extends BaseTestCase {
 	}
 
 	public function test_delete() {
-		add_option( 'test', 123 );
-		$this->assertEquals( 123, get_option( 'test' ) );
-		delete_option( 'test' );
-		$this->assertEquals( null, get_option( 'test' ) );
+		add_option( 'testdelete', 123 );
+		$this->assertEquals( 123, get_option( 'testdelete' ) );
+		delete_option( 'testdelete' );
+		$this->assertEquals( null, get_option( 'testdelete' ) );
 	}
 
 }

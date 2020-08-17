@@ -21,10 +21,51 @@ abstract class BaseTestCase extends TestCase {
 	 * After a test method runs, reset any state in WordPress the test method might have changed.
 	 */
 	public function tearDown() {
-
 		$this->_restore_hooks();
 		Options::init()->clear_options();
+		Posts::init()->clear_all_posts();
+		PostMeta::init()->clear_all_meta();
+		$this->clear_uploads();
+	}
 
+	/**
+	 * Deletes everything from the uploads folder
+	 *
+	 * @return void
+	 */
+	public function clear_uploads() {
+		$uploads_folder = ABSPATH . '/wp-content/uploads';
+		$scan           = glob( rtrim( $uploads_folder, '/' ) . '/*' );
+
+		foreach ( $scan as $path ) {
+			$this->recursive_delete( $path );
+		}
+	}
+
+	/**
+	 * Recursive deletes a file or folder
+	 *
+	 * @param string $file File or folder name
+	 * @return boolean
+	 */
+	protected function recursive_delete( $file ) {
+
+		if ( is_file( $file ) ) {
+			return unlink( $file );
+		}
+
+		if ( is_dir( $file ) ) {
+
+			$scan = glob( rtrim( $file, '/' ) . '/*' );
+
+			foreach ( $scan as $path ) {
+				$this->recursive_delete( $path );
+			}
+
+			return rmdir( $file );
+		}
+
+		return false;
 	}
 
 	/**
