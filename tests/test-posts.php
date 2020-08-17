@@ -80,7 +80,7 @@ class Test_Posts extends BaseTestCase {
 		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
 
 		$mid = add_post_meta( $id1, 'test', 'value-1' );
-		$this->assertIsInt( $mid );
+		$this->assertTrue( is_int( $mid ) );
 
 		$this->assertEquals( 'value-1', get_post_meta( $id1, 'test', true ) );
 		$this->assertEquals( array( 'value-1' ), get_post_meta( $id1, 'test' ) );
@@ -90,7 +90,7 @@ class Test_Posts extends BaseTestCase {
 		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
 
 		$mid = add_post_meta( $id1, 'test', array('value1', 'value2') );
-		$this->assertIsInt( $mid );
+		$this->assertTrue( is_int( $mid ) );
 
 		$this->assertEquals( array('value1', 'value2'), get_post_meta( $id1, 'test', true ) );
 		$this->assertEquals( array( array('value1', 'value2') ), get_post_meta( $id1, 'test' ) );
@@ -112,7 +112,7 @@ class Test_Posts extends BaseTestCase {
 		$id1 = wp_insert_post( array( 'post_title' => 'Post 1' ) );
 
 		$mid = add_post_meta( $id1, 'test', 'value-1' );
-		$this->assertIsInt( $mid );
+		$this->assertTrue( is_int( $mid ) );
 
 		$this->assertEquals( 'value-1', get_metadata_by_mid( 'post', $mid ) );
 	}

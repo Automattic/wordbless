@@ -41,7 +41,7 @@ class Options {
 	 *
 	 * @param array  $query_results
 	 * @param string $query
-	 * @return void
+	 * @return array
 	 */
 	public function filter_query( $query_results, $query ) {
 		global $wpdb;

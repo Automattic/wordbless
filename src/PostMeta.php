@@ -12,8 +12,6 @@ class PostMeta {
 
 	private function __construct() {
 
-		$this->column = $this->meta_type . '_id';
-
 		add_filter( "add_{$this->meta_type}_metadata", array( $this, 'add' ), 10, 5 );
 
 		add_filter( "get_{$this->meta_type}_metadata", array( $this, 'get' ), 10, 4 );

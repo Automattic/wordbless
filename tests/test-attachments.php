@@ -36,7 +36,7 @@ class Test_Attachments extends BaseTestCase {
 
 	public function test_add_attachment() {
 		$id = $this->create_upload_object( TESTSPATH . '/wp-logo.jpg' );
-		$this->assertIsInt( $id );
+		$this->assertTrue( is_int( $id ) );
 		$attachment = get_post( $id );
 		$this->assertEquals( 'attachment', $attachment->post_type );
 	}
