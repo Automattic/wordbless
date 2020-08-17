@@ -23,6 +23,17 @@
 	"scripts": {
 		"post-install-cmd": "php -r \"copy('src/dbless-wpdb.php', 'wordpress/wp-content/db.php');\"",
 		"post-update-cmd": "php -r \"copy('src/dbless-wpdb.php', 'wordpress/wp-content/db.php');\"",
+		"ci": [
+			"phive install --trust-gpg-keys C00543248C87FB13,31C7E470E2138192",
+			"@composer validate --strict",
+			"tools/composer-normalize normalize --dry-run",
+			"@composer require --working-dir=tools 'wp-coding-standards/wpcs:^2.3.0'",
+			"tools/phpcs --config-set installed_paths tools/vendor/wp-coding-standards/wpcs",
+			"tools/phpcs -s --standard=WordPress-Core --exclude=WordPress.Files.FileName src/",
+			"@composer require --working-dir=tools 'szepeviktor/phpstan-wordpress:^0.6.2'",
+			"tools/vendor/bin/phpstan analyze --memory-limit=2G src/",
+			"@phpunit"
+		],
 		"phpunit": [
 			"@composer install",
 			"./vendor/phpunit/phpunit/phpunit --colors=always"
