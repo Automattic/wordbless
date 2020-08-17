@@ -177,7 +177,7 @@ class PostMeta {
 		// Compare existing value to new value if no prev value given and the key exists only once.
 		if ( empty( $prev_value ) ) {
 			$old_value = get_metadata( $this->meta_type, $object_id, $meta_key );
-			if ( count( $old_value ) == 1 ) { //phpcs:ignore code copied from core. I don't want to mess with it.
+			if ( 1 === count( $old_value ) ) {
 				if ( $old_value[0] === $meta_value ) {
 					return false;
 				}
