@@ -64,6 +64,8 @@ abstract class BaseTestCase extends TestCase {
 
 			return rmdir( $file );
 		}
+
+		return false;
 	}
 
 	/**

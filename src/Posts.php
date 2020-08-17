@@ -32,7 +32,7 @@ class Posts {
 		return $query_results;
 	}
 
-	public function insert_post( $data, $postarr, $unsanitized_postarr ) {
+	public function insert_post( $data, $postarr, $unsanitized_postarr = array() ) {
 
 		if ( ! isset( $postarr['ID'] ) || empty( $postarr['ID'] ) || 0 === $postarr['ID'] ) {
 			$post_ID = InsertId::bump_and_get();
