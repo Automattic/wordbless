@@ -74,3 +74,13 @@ Just declare a `dbless_default_options()` function in your bootstrap and make it
 ## Example
 
 See a live example here -> https://github.com/Automattic/jetpack/pull/16163
+
+### Running our CI locally
+
+First [install phive](https://phar.io/#Install) globally on your computer.
+
+Then issue the following single command.
+
+```bash
+composer run-script ci
+```
