@@ -35,9 +35,9 @@ abstract class BaseTestCase extends TestCase {
 	 */
 	public function clear_uploads() {
 		$uploads_folder = ABSPATH . '/wp-content/uploads';
-		$scan = glob(rtrim( $uploads_folder, '/').'/*' );
+		$scan           = glob( rtrim( $uploads_folder, '/' ) . '/*' );
 
-		foreach( $scan as $path ) {
+		foreach ( $scan as $path ) {
 			$this->recursive_delete( $path );
 		}
 	}
@@ -56,10 +56,10 @@ abstract class BaseTestCase extends TestCase {
 
 		if ( is_dir( $file ) ) {
 
-			$scan = glob(rtrim($file, '/').'/*');
+			$scan = glob( rtrim( $file, '/' ) . '/*' );
 
-			foreach( $scan as $path ) {
-				$this->recursive_delete($path);
+			foreach ( $scan as $path ) {
+				$this->recursive_delete( $path );
 			}
 
 			return rmdir( $file );

@@ -31,7 +31,7 @@ class PostMeta {
 		}
 
 		foreach ( $this->meta[ $object_id ] as $meta ) {
-			if ( isset( $meta[ 'meta_key' ] ) && $meta_key === $meta[ 'meta_key' ] ) {
+			if ( isset( $meta['meta_key'] ) && $meta_key === $meta['meta_key'] ) {
 				return true;
 			}
 		}
@@ -57,10 +57,10 @@ class PostMeta {
 
 		$mid = InsertId::bump_and_get();
 
-		$this->meta[ $object_id ][]  = array(
+		$this->meta[ $object_id ][] = array(
 			'mid'        => $mid,
 			'meta_key'   => $meta_key,
-			'meta_value' => $meta_value
+			'meta_value' => $meta_value,
 		);
 
 		do_action( "added_{$this->meta_type}_meta", $mid, $object_id, $meta_key, $_meta_value );
@@ -73,7 +73,7 @@ class PostMeta {
 		$check = array();
 		if ( isset( $this->meta[ $object_id ] ) ) {
 			foreach ( $this->meta[ $object_id ] as $meta ) {
-				if ( isset( $meta[ 'meta_key' ] ) && $meta_key === $meta[ 'meta_key' ] ) {
+				if ( isset( $meta['meta_key'] ) && $meta_key === $meta['meta_key'] ) {
 					$check[] = maybe_unserialize( $meta['meta_value'] );
 					if ( $single ) {
 						break;
@@ -88,7 +88,7 @@ class PostMeta {
 
 		foreach ( $this->meta as $object_id => $object_meta ) {
 			foreach ( $object_meta as $index => $meta ) {
-				if ( isset( $meta[ 'mid' ] ) && $mid === $meta[ 'mid' ] ) {
+				if ( isset( $meta['mid'] ) && $mid === $meta['mid'] ) {
 					return array(
 						'object_id' => $object_id,
 						'index'     => $index,
@@ -105,7 +105,7 @@ class PostMeta {
 
 	public function get_by_mid( $check, $mid ) {
 		$check = false;
-		$meta = $this->find_by_mid( $mid );
+		$meta  = $this->find_by_mid( $mid );
 		if ( $meta ) {
 			$check = maybe_unserialize( $meta['value'] );
 		}
@@ -115,9 +115,9 @@ class PostMeta {
 	public function delete( $check, $object_id, $meta_key, $meta_value, $delete_all ) {
 
 		$object_ids = $delete_all ? array_keys( $this->meta ) : array( $object_id );
-		$check     = false;
+		$check      = false;
 
-		foreach( $object_ids as $id ) {
+		foreach ( $object_ids as $id ) {
 			if ( $this->delete_for_object( $id, $meta_key, $meta_value ) ) {
 				$check = true;
 			}
@@ -145,7 +145,7 @@ class PostMeta {
 					$meta_value === $meta['meta_value']
 				)
 			) {
-				unset( $this->meta[ $object_id ][$index] );
+				unset( $this->meta[ $object_id ][ $index ] );
 				$found = true;
 			}
 		}
@@ -158,11 +158,11 @@ class PostMeta {
 
 	public function delete_by_mid( $check, $mid ) {
 		$check = false;
-		$meta = $this->find_by_mid( $mid );
+		$meta  = $this->find_by_mid( $mid );
 		if ( $meta ) {
 			unset( $this->meta[ $meta['object_id'] ][ $meta['index'] ] );
 			$this->meta[ $meta['object_id'] ] = array_values( $this->meta[ $meta['object_id'] ] );
-			$check = true;
+			$check                            = true;
 		}
 		return $check;
 	}
@@ -177,7 +177,7 @@ class PostMeta {
 		// Compare existing value to new value if no prev value given and the key exists only once.
 		if ( empty( $prev_value ) ) {
 			$old_value = get_metadata( $this->meta_type, $object_id, $meta_key );
-			if ( count( $old_value ) == 1 ) {
+			if ( count( $old_value ) == 1 ) { //phpcs:ignore code copied from core. I don't want to mess with it.
 				if ( $old_value[0] === $meta_value ) {
 					return false;
 				}
@@ -202,14 +202,14 @@ class PostMeta {
 			) {
 
 				do_action( "update_{$this->meta_type}_meta", $meta['mid'], $object_id, $meta_key, $_meta_value );
-				if ( 'post' == $this->meta_type ) {
+				if ( 'post' === $this->meta_type ) {
 					do_action( 'update_postmeta', $meta['mid'], $object_id, $meta_key, $meta_value );
 				}
 
-				$this->meta[ $object_id ][$index]['meta_value'] = $meta_value;
+				$this->meta[ $object_id ][ $index ]['meta_value'] = $meta_value;
 
 				do_action( "updated_{$this->meta_type}_meta", $meta['mid'], $object_id, $meta_key, $_meta_value );
-				if ( 'post' == $this->meta_type ) {
+				if ( 'post' === $this->meta_type ) {
 					do_action( 'updated_postmeta', $meta['mid'], $object_id, $meta_key, $meta_value );
 				}
 
@@ -223,7 +223,7 @@ class PostMeta {
 
 	public function update_by_mid( $check, $mid, $meta_value, $meta_key ) {
 		$check = false;
-		$meta = $this->find_by_mid( $mid );
+		$meta  = $this->find_by_mid( $mid );
 		if ( $meta ) {
 
 			$meta_subtype = get_object_subtype( $this->meta_type, $meta['object_id'] );
@@ -235,7 +235,7 @@ class PostMeta {
 			/** This action is documented in wp-includes/meta.php */
 			do_action( "update_{$this->meta_type}_meta", $mid, $meta['object_id'], $meta_key, $_meta_value );
 
-			if ( 'post' == $this->meta_type ) {
+			if ( 'post' === $this->meta_type ) {
 				/** This action is documented in wp-includes/meta.php */
 				do_action( 'update_postmeta', $mid, $meta['object_id'], $meta_key, $meta_value );
 			}
@@ -249,7 +249,7 @@ class PostMeta {
 			/** This action is documented in wp-includes/meta.php */
 			do_action( "updated_{$this->meta_type}_meta", $mid, $meta['object_id'], $meta_key, $_meta_value );
 
-			if ( 'post' == $this->meta_type ) {
+			if ( 'post' === $this->meta_type ) {
 				/** This action is documented in wp-includes/meta.php */
 				do_action( 'updated_postmeta', $mid, $meta['object_id'], $meta_key, $meta_value );
 			}

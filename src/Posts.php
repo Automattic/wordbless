@@ -23,7 +23,7 @@ class Posts {
 		global $wpdb;
 		// this pattern is used in get_post() and in wp_delete_post().
 		$pattern = '/^SELECT \* FROM ' . preg_quote( $wpdb->posts ) . ' WHERE ID = (\d+)( LIMIT 1)?$/';
-		if( 1 === preg_match( $pattern, $query, $matches ) ) {
+		if ( 1 === preg_match( $pattern, $query, $matches ) ) {
 			$post_id = (int) $matches[1];
 			if ( isset( $this->posts[ $post_id ] ) ) {
 				return array( $this->posts[ $post_id ] );

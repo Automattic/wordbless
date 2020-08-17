@@ -2,7 +2,7 @@
 
 namespace WorDBless;
 
-Trait Singleton {
+trait Singleton {
 
 	private static $instance = null;
 
