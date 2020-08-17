@@ -31,7 +31,7 @@
 			"tools/phpcs --config-set installed_paths tools/vendor/wp-coding-standards/wpcs",
 			"tools/phpcs -s --standard=WordPress-Core --exclude=WordPress.Files.FileName src/",
 			"@composer require --working-dir=tools 'szepeviktor/phpstan-wordpress:^0.6.2'",
-			"tools/vendor/bin/phpstan analyze src/",
+			"tools/vendor/bin/phpstan analyze --memory-limit=2G src/",
 			"@phpunit"
 		],
 		"phpunit": [
