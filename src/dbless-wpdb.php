@@ -56,7 +56,7 @@ class Db_Less_Wpdb extends wpdb {
 		}
 		$this->last_result = $result;
 
-		$this->insert_id  = \WorDBless\InsertId::$id;
+		$this->insert_id = \WorDBless\InsertId::$id;
 		return true;
 	}
 
