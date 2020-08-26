@@ -118,6 +118,10 @@ class Options {
 	public function clear_cache_group() {
 		global $wp_object_cache;
 
+		if ( ! isset( $wp_object_cache->cache['options'] ) || ! is_array( $wp_object_cache->cache['options'] ) ) {
+			return;
+		}
+
 		foreach ( array_keys( $wp_object_cache->cache['options'] ) as $key ) {
 			wp_cache_delete( $key, 'options' );
 		}
