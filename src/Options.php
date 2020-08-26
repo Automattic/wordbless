@@ -17,7 +17,7 @@ class Options {
 	public $options = array();
 
 	private function __construct() {
-		add_filter( 'alloptions', array( $this, 'get_all_options' ), 10 );
+		app_filter( 'alloptions', array( $this, 'get_all_options' ), 10 );
 		add_filter( 'update_option', array( $this, 'update_option' ), 10, 3 );
 		add_filter( 'add_option', array( $this, 'add_option' ), 10, 2 );
 		add_filter( 'deleted_option', array( $this, 'delete_option' ) );
