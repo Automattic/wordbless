@@ -32,4 +32,16 @@ class Test_Options extends BaseTestCase {
 		$this->assertEquals( null, get_option( 'testdelete' ) );
 	}
 
+	/**
+	 * Assert that no error is triggered if you try to delete an option before any option is set.
+	 * See #16
+	 */
+	public function test_delete_options_any_exists() {
+
+		wp_cache_flush();
+		delete_option( 'foo' );
+		$this->assertTrue( true );
+
+	}
+
 }
