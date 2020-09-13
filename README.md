@@ -5,15 +5,15 @@ WorDBless allows you to use WordPress core functions in your PHPUnit tests witho
 
 ### Require WorDBless
 
-```
-composer require automattic/wordbless --dev
+```bash
+composer require --dev automattic/wordbless
 ```
 
 ### Make sure to copy db.php
 
 Add this script to your `composer.json`:
 
-```
+```json
     "scripts": {
         "post-update-cmd": "php -r \"copy('vendor/automattic/wordbless/src/dbless-wpdb.php', 'wordpress/wp-content/db.php');\""
     },
@@ -25,11 +25,10 @@ Alternatively, you can manually copy the file.
 
 In your PHP Unit bootstrap file add:
 
-```
+```php
 require_once __DIR__ . '/../vendor/autoload.php'; // adjust the path as needed
 
 \WorDBless\Load::load();
-
 ```
 
 That's it! You can now use WordPress core functions in your tests!
@@ -38,7 +37,7 @@ That's it! You can now use WordPress core functions in your tests!
 
 Extend the `BaseTestCase` in order to have all the `setUp` and `tearDown`in place.
 
-```PHP
+```php
 class My_Tests extends \WorDBless\BaseTestCase {
 
 	public function test_add() {
