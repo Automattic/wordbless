@@ -48,7 +48,7 @@ jobs:
       - name: "Cache PHAR files installed with phive"
         uses: "actions/cache@v2.1.0"
         with:
-          path: "${HOME}/.phive"
+          path: "~/.phive"
           key: "php-${{ matrix.php-version }}-phive-${{ matrix.dependencies }}-${{ hashFiles('.phive/phars.xml') }}"
           restore-keys: "php-${{ matrix.php-version }}-phive-${{ matrix.dependencies }}-"
 
@@ -130,7 +130,7 @@ jobs:
       - name: "Cache PHAR files installed with phive"
         uses: "actions/cache@v2.1.0"
         with:
-          path: "${HOME}/.phive"
+          path: "~/.phive"
           key: "php-${{ matrix.php-version }}-phive-${{ matrix.dependencies }}-${{ hashFiles('.phive/phars.xml') }}"
           restore-keys: "php-${{ matrix.php-version }}-phive-${{ matrix.dependencies }}-"
 
