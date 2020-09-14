@@ -54,6 +54,8 @@ jobs:
 
       - name: "Install phive from cache"
         run: |
+          find ${HOME}/
+          echo "------------------------------ 8< -------------------------------"
           if [ ! -r "${HOME}/.phive/phive.phar" ]; then
             mkdir -p "${HOME}/bin" "${HOME}/.phive"
             wget -O "${HOME}/.phive/phive.phar" "https://phar.io/releases/phive.phar"
