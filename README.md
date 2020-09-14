@@ -1,4 +1,7 @@
 # WorDBless
+
+[![CI](https://github.com/Automattic/wordbless/workflows/CI/badge.svg)](https://github.com/Automattic/wordbless/actions?query=workflow%3ACI)
+
 WorDBless allows you to use WordPress core functions in your PHPUnit tests without having to set up a database and the whole WordPress environment
 
 ## Usage
