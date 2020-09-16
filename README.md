@@ -61,9 +61,35 @@ Basically any WordPress core function will work. Things like `wp_parse_args`, `a
 
 Hooks and filters will work.
 
-Anything that uses the database WILL NOT work, unless you believe in magic.
+Most of the things that uses the database WILL NOT work, unless you believe in magic.
 
-EXCEPT that, magically, OPTIONS WILL WORK. `get_option`, `update_option`, `add_option` and `delete_option` should work fine!
+### What magic WorDBless adds?
+
+#### Options
+
+Manipulating options will work. `get_option`, `update_option`, `add_option` and `delete_option` should work fine!
+
+#### Posts and Post meta
+
+Manipulating (creating, updating, deleting) posts and attachments will work. Fetching a single post will also work. Here is a non-exaustive list of functions supported:
+* wp_insert_post
+* wp_update_post
+* wp_delete_post
+* wp_trash_post
+* wp_untrash_post
+* get_post
+* get_post_meta
+* add_post_meta
+* update_post_meta
+* delete_post_meta
+* get_metadata_by_mid
+* update_metadata_by_mid
+* delete_metadata_by_mid
+* wp_insert_attachment
+* wp_get_attachment_image
+* and almost anything related to the manipulation of one attachment
+
+Note: Fetching for posts using `WP_Query` will not work (yet)! To get a post use `get_post( $id )`.
 
 ### Populating default options
 
