@@ -72,21 +72,22 @@ Manipulating options will work. `get_option`, `update_option`, `add_option` and 
 #### Posts and Post meta
 
 Manipulating (creating, updating, deleting) posts and attachments will work. Fetching a single post will also work. Here is a non-exaustive list of functions supported:
-* wp_insert_post
-* wp_update_post
-* wp_delete_post
-* wp_trash_post
-* wp_untrash_post
-* get_post
-* get_post_meta
-* add_post_meta
-* update_post_meta
-* delete_post_meta
-* get_metadata_by_mid
-* update_metadata_by_mid
-* delete_metadata_by_mid
-* wp_insert_attachment
-* wp_get_attachment_image
+
+* `wp_insert_post`
+* `wp_update_post`
+* `wp_delete_post`
+* `wp_trash_post`
+* `wp_untrash_post`
+* `get_post`
+* `get_post_meta`
+* `add_post_meta`
+* `update_post_meta`
+* `delete_post_meta`
+* `get_metadata_by_mid`
+* `update_metadata_by_mid`
+* `delete_metadata_by_mid`
+* `wp_insert_attachment`
+* `wp_get_attachment_image`
 * and almost anything related to the manipulation of one attachment
 
 Note: Fetching for posts using `WP_Query` will not work (yet)! To get a post use `get_post( $id )`.
