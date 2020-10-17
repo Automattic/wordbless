@@ -6,43 +6,40 @@ class WpDie {
 
 	use Singleton;
 
+	/**
+	 * @var array<string, callable>
+	 */
+	private $core_handlers;
+
 	private function __construct() {
-		add_filter( 'wp_die_ajax_handler', array( $this, 'die_handler' ) );
-		add_filter( 'wp_die_json_handler', array( $this, 'die_handler' ) );
-		add_filter( 'wp_die_jsonp_handler', array( $this, 'die_handler' ) );
-		add_filter( 'wp_die_xmlrpc_handler', array( $this, 'die_handler' ) );
-		add_filter( 'wp_die_xml_handler', array( $this, 'die_handler' ) );
+
+		$this->core_handlers = [
+			'wp_die_ajax_handler'   => '_ajax_wp_die_handler',
+			'wp_die_json_handler'   => '_json_wp_die_handler',
+			'wp_die_jsonp_handler'  => '_json_wp_die_handler',
+			'wp_die_xmlrpc_handler' => '_xmlrpc_wp_die_handler',
+			'wp_die_xml_handler'    => '_xml_wp_die_handler',
+		];
+		add_filter( 'wp_die_ajax_handler', [ $this, 'change_handler' ], 10, 1 );
+		add_filter( 'wp_die_json_handler', [ $this, 'change_handler' ], 10, 1 );
+		add_filter( 'wp_die_jsonp_handler', [ $this, 'change_handler' ], 10, 1 );
+		add_filter( 'wp_die_xmlrpc_handler', [ $this, 'change_handler' ], 10, 1 );
+		add_filter( 'wp_die_xml_handler', [ $this, 'change_handler' ], 10, 1 );
 	}
 
-	public function die_handler( $function ) {
+	public function change_handler( $function ) {
 
-		return array( $this, $function );
+		return [ $this, 'handler' ];
 	}
 
-	public function _ajax_wp_die_handler( $message, $title = '', $args = array() ) {
+	public function handler( $message, $title = '', $args = [] ) {
+
+		$current_filter = current_filter();
+		if ( ! array_key_exists( $current_filter, $this->core_handlers ) ) {
+			return;
+		}
 
 		$args['exit'] = false;
-		_ajax_wp_die_handler( $message, $title, $args );
+		${$this->core_handlers[$current_filter]}( $message, $title, $args );
 	}
-
-	public function _json_wp_die_handler( $message, $title = '', $args = array() ) {
-		$args['exit'] = false;
-		_json_wp_die_handler( $message, $title, $args );
-	}
-
-	public function _jsonp_wp_die_handler( $message, $title = '', $args = array() ) {
-		$args['exit'] = false;
-		_jsonp_wp_die_handler( $message, $title, $args );
-	}
-
-	public function _xmlrpc_wp_die_handler( $message, $title = '', $args = array() ) {
-		$args['exit'] = false;
-		_xmlrpc_wp_die_handler( $message, $title, $args );
-	}
-
-	public function _xml_wp_die_handler( $message, $title = '', $args = array() ) {
-		$args['exit'] = false;
-		_xml_wp_die_handler( $message, $title, $args );
-	}
-
 }
