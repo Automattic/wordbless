@@ -16,7 +16,7 @@ class WpDie {
 
 	public function die_handler( $function ) {
 
-		return [ $this, $function ];
+		return array( $this, $function );
 	}
 
 	public function _ajax_wp_die_handler( $message, $title = '', $args = array() ) {
