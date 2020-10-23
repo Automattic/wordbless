@@ -2,6 +2,8 @@
 
 namespace WorDBless;
 
+use function dbless_default_options;
+
 /**
  * Implements support to Options
  */
@@ -79,8 +81,8 @@ class Options {
 		}
 
 		$custom_defaults = array();
-		if ( function_exists( '\dbless_default_options' ) ) {
-			$custom_defaults = \dbless_default_options();
+		if ( function_exists( 'dbless_default_options' ) ) {
+			$custom_defaults = dbless_default_options();
 		}
 
 		$all_options = array_merge(
