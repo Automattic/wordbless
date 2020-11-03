@@ -34,9 +34,10 @@ jobs:
       - name: "Install PHP with extensions"
         uses: "shivammathur/setup-php@2.4.1"
         with:
-          coverage: "none"
-          extensions: "${{ env.PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php-version }}"
+          extensions: "${{ env.PHP_EXTENSIONS }}"
+          coverage: "none"
+          tools: "composer:v1"
 
       - name: "Validate composer.json and composer.lock"
         run: "composer validate --strict"
@@ -119,9 +120,10 @@ jobs:
       - name: "Install PHP with extensions"
         uses: "shivammathur/setup-php@2.4.1"
         with:
-          coverage: "none"
-          extensions: "${{ env.PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php-version }}"
+          extensions: "${{ env.PHP_EXTENSIONS }}"
+          coverage: "none"
+          tools: "composer:v1"
 
       - name: "Determine composer cache directory"
         id: "determine-composer-cache-directory"
@@ -211,9 +213,10 @@ jobs:
       - name: "Install PHP with extensions"
         uses: "shivammathur/setup-php@2.4.1"
         with:
-          coverage: "none"
-          extensions: "${{ env.PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php-version }}"
+          extensions: "${{ env.PHP_EXTENSIONS }}"
+          coverage: "none"
+          tools: "composer:v1"
 
       - name: "Determine composer cache directory"
         id: "determine-composer-cache-directory"
@@ -264,9 +267,10 @@ jobs:
       - name: "Install PHP with extensions"
         uses: "shivammathur/setup-php@2.4.1"
         with:
-          coverage: "none"
-          extensions: "${{ env.PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php-version }}"
+          extensions: "${{ env.PHP_EXTENSIONS }}"
+          coverage: "none"
+          tools: "composer:v1"
 
       - name: "Determine composer cache directory"
         id: "determine-composer-cache-directory"
