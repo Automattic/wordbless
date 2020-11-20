@@ -90,7 +90,32 @@ Manipulating (creating, updating, deleting) posts and attachments will work. Fet
 * `wp_get_attachment_image`
 * and almost anything related to the manipulation of one attachment
 
-Note: Fetching for posts using `WP_Query` will not work (yet)! To get a post use `get_post( $id )`.
+Note: Fetching posts using `WP_Query` will not work (yet)! To fetech a post, use `get_post( $id )`.
+
+#### Users and capabilities
+
+You can create, edit and delete users.
+
+Here is a non-exaustive list of functions supported:
+
+* `wp_insert_user`
+* `wp_update_user`
+* `wp_delete_user`
+* `get_userdata`
+* `new WP_User( $id )` to fetch a user
+* `user_can`
+* `current_user_can`
+* `set_current_user`
+* `get_current_user_id`
+* `wp_get_current_user`
+* `get_user_meta`
+* `update_user_meta`
+* `add_user_meta`
+* `delete_user_meta`
+
+Posts can be assigned to users and proper capabilities will be correctly checked. When deleting a user, reassigning posts to other user will also work.
+
+Note: Fetching users using `WP_Users_Query` will not work! To fetch a user, use `get_userdata()`, `get_user_by` or `WP_User` class.
 
 ### Populating default options
 
