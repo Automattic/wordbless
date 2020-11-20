@@ -42,6 +42,64 @@ class Db_Less_Wpdb extends wpdb {
 		return true;
 	}
 
+	public function update( $table, $data, $where, $format = null, $where_format = null ) {
+		$result = parent::update( $table, $data, $where, $format, $where_format );
+
+		/**
+		 * Filters the return of $wpdb->update
+		 *
+		 * @param int|false    $result The number of rows affected, or false on error.
+		 * @param string       $table The database table.
+		 * @param array        $data Data to update.
+		 * @param array        $where A named array of WHERE clauses.
+		 * @param array|string $format (Optional) An array of formats to be mapped to each of the values in $data. A named array of WHERE clauses.
+		 * @param array|string $where_format (Optional) An array of formats to be mapped to each of the values in $where.
+		 */
+		return apply_filters( 'wordbless_wpdb_update', $result, $table, $data, $where, $format, $where_format );
+	}
+
+	public function insert( $table, $data, $format = null ) {
+		$result = parent::insert( $table, $data, $format );
+
+		/**
+		 * Filters the return of $wpdb->insert
+		 *
+		 * @param int|false    $result The number of rows inserted, or false on error.
+		 * @param string       $table The database table.
+		 * @param array        $data Data to insert.
+		 * @param array|string $format (Optional) An array of formats to be mapped to each of the values in $data. A named array of WHERE clauses.
+		 */
+		return apply_filters( 'wordbless_wpdb_insert', $result, $table, $data, $format );
+	}
+
+	public function delete( $table, $where, $where_format = null ) {
+		$result = parent::delete( $table, $where, $where_format );
+
+		/**
+		 * Filters the return of $wpdb->delete
+		 *
+		 * @param int|false    $result The number of rows affected, or false on error.
+		 * @param string       $table The database table.
+		 * @param array        $where A named array of WHERE clauses.
+		 * @param array|string $where_format (Optional) An array of formats to be mapped to each of the values in $where.
+		 */
+		return apply_filters( 'wordbless_wpdb_delete', $result, $table, $where, $where_format );
+	}
+
+	public function replace( $table, $data, $format = null ) {
+		$result = parent::replace( $table, $data, $format );
+
+		/**
+		 * Filters the return of $wpdb->replace
+		 *
+		 * @param int|false    $result The number of rows affected, or false on error.
+		 * @param string       $table The database table.
+		 * @param array        $table The data to be inserted.
+		 * @param array|string $format (Optional) An array of formats to be mapped to each of the value in $data.
+		 */
+		return apply_filters( 'wordbless_wpdb_replace', $result, $table, $data, $format );
+	}
+
 	public function query( $query ) {
 
 		/**

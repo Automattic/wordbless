@@ -25,6 +25,7 @@ abstract class BaseTestCase extends TestCase {
 		Options::init()->clear_options();
 		Posts::init()->clear_all_posts();
 		PostMeta::init()->clear_all_meta();
+		Users::init()->clear_all_users();
 		$this->clear_uploads();
 	}
 

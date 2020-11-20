@@ -29,6 +29,8 @@ class Load {
 		Options::init();
 		Posts::init();
 		PostMeta::init();
+		Users::init();
+		UserMeta::init();
 		WpDie::init();
 	}
 

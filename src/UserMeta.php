@@ -2,13 +2,13 @@
 
 namespace WorDBless;
 
-class PostMeta extends Metadata {
+class UserMeta extends Metadata {
 
 	private static $instance = null;
 
 	public static function init() {
 		if ( null === self::$instance ) {
-			self::$instance = new Metadata( 'post' );
+			self::$instance = new Metadata( 'user' );
 		}
 		return self::$instance;
 	}
