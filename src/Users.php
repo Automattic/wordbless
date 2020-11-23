@@ -108,7 +108,7 @@ class Users {
 	}
 
 	public function get_user_by( $field, $value ) {
-		$user = null;
+		$user = false;
 		if ( 'ID' === $field && isset( $this->users[ $value ] ) ) {
 			$user = (object) $this->users[ $value ];
 		} elseif ( 'ID' !== $field ) {
@@ -119,7 +119,9 @@ class Users {
 				}
 			);
 
-			$user = (object) current( $filtered );
+			if ( ! empty( $filtered ) ) {
+				$user = (object) current( $filtered );
+			}
 		}
 		return $user;
 	}

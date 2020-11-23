@@ -169,5 +169,9 @@ class Test_Users extends BaseTestCase {
 
 	}
 
+	public function test_get_user_by_dont_find() {
+		$this->assertFalse( get_user_by( 'login', 'asdasd' ) );
+	}
+
 
 }
