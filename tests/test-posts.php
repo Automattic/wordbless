@@ -276,4 +276,9 @@ class Test_Posts extends BaseTestCase {
 		$this->assertEmpty( get_post_meta( $id1, 'test', true ) );
 	}
 
+	public function test_get_non_existent_meta() {
+		$this->assertSame( '', get_post_meta( 123123, 'asdasd', true ) );
+		$this->assertSame( array(), get_post_meta( 123123, 'asdasd' ) );
+	}
+
 }
