@@ -2,7 +2,7 @@
 
 namespace WorDBless;
 
-class PostMeta extends Metadata {
+class PostMeta {
 
 	private static $instance = null;
 

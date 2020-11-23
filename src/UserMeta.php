@@ -2,7 +2,7 @@
 
 namespace WorDBless;
 
-class UserMeta extends Metadata {
+class UserMeta {
 
 	private static $instance = null;
 
