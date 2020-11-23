@@ -81,6 +81,9 @@ class Metadata {
 				}
 			}
 		}
+		if ( empty( $check ) && $single ) {
+			$check = array( '' ); // Ensure an empty string is returned when meta is not found.
+		}
 		return $check;
 	}
 

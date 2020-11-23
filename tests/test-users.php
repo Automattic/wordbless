@@ -83,7 +83,7 @@ class Test_Users extends BaseTestCase {
 
 		$this->assertFalse( get_userdata( $id ), 'User was not deleted' );
 		$this->assertNull( get_post( $post ), 'Posts from deleted user were not deleted' );
-		$this->assertNull( get_user_meta( $id, 'nickname', true ), 'User metadata was not deleted' );
+		$this->assertEmpty( get_user_meta( $id, 'nickname', true ), 'User metadata was not deleted' );
 
 	}
 
