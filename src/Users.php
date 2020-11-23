@@ -18,7 +18,7 @@ class Users {
 
 		add_filter( 'wordbless_wpdb_query_results', array( $this, 'filter_query' ), 10, 2 );
 
-		add_action ( 'delete_user', array( $this, 'delete' ), 10, 2 );
+		add_action( 'delete_user', array( $this, 'delete' ), 10, 2 );
 	}
 
 	/**
@@ -60,11 +60,11 @@ class Users {
 
 		if ( is_array( $where ) && 1 === count( $where ) && isset( $where['ID'] ) ) {
 			if ( isset( $this->users[ $where['ID'] ] ) ) {
+				$result                      = 1;
 				$this->users[ $where['ID'] ] = array_merge(
 					$this->users[ $where['ID'] ],
 					$data
 				);
-				$result = 1;
 			}
 		}
 
@@ -114,10 +114,11 @@ class Users {
 		} elseif ( 'ID' !== $field ) {
 			$filtered = array_filter(
 				$this->users,
-				function( $user ) use( $field, $value ) {
+				function( $user ) use ( $field, $value ) {
 					return isset( $user[ $field ] ) && $user[ $field ] === $value;
 				}
 			);
+
 			$user = (object) current( $filtered );
 		}
 		return $user;
