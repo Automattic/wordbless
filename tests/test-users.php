@@ -10,6 +10,7 @@ class Test_Users extends BaseTestCase {
 		$id = wp_insert_user(
 			array(
 				'user_login' => 'zumbi',
+				'user_pass'  => '123',
 			)
 		);
 
@@ -22,7 +23,8 @@ class Test_Users extends BaseTestCase {
 		$id = wp_insert_user(
 			array(
 				'user_login' => 'zumbi',
-				'role' => 'subscriber',
+				'user_pass'  => '123',
+				'role'       => 'subscriber',
 			)
 		);
 
@@ -46,6 +48,7 @@ class Test_Users extends BaseTestCase {
 		$id = wp_insert_user(
 			array(
 				'user_login' => 'zumbi',
+				'user_pass'  => '123',
 			)
 		);
 
@@ -60,6 +63,7 @@ class Test_Users extends BaseTestCase {
 		$id = wp_insert_user(
 			array(
 				'user_login' => 'zumbi',
+				'user_pass'  => '123',
 			)
 		);
 
@@ -91,6 +95,7 @@ class Test_Users extends BaseTestCase {
 		$id = wp_insert_user(
 			array(
 				'user_login' => 'zumbi',
+				'user_pass'  => '123',
 			)
 		);
 
@@ -122,7 +127,8 @@ class Test_Users extends BaseTestCase {
 		$id = wp_insert_user(
 			array(
 				'user_login' => 'zumbi',
-				'role' => 'author',
+				'user_pass'  => '123',
+				'role'       => 'author',
 			)
 		);
 
@@ -142,7 +148,8 @@ class Test_Users extends BaseTestCase {
 		$id = wp_insert_user(
 			array(
 				'user_login' => 'zumbi',
-				'role' => 'author',
+				'user_pass'  => '123',
+				'role'       => 'author',
 			)
 		);
 

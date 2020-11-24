@@ -47,9 +47,15 @@ class Options {
 	 */
 	public function filter_query( $query_results, $query ) {
 		global $wpdb;
-		$pattern = '/^SELECT autoload FROM ' . preg_quote( $wpdb->options ) . ' WHERE option_name = [^ ]+$/';
+		$pattern = '/^SELECT autoload FROM ' . preg_quote( $wpdb->options ) . ' WHERE option_name = \'([^ ]+)\'$/';
 		if ( 1 === preg_match( $pattern, $query, $matches ) ) {
-			return array( 'yes' );
+			if ( isset( $this->get_all_options()[ $matches[1] ] ) ) {
+				return array(
+					(object) array(
+						'autoload' => 'no',
+					)
+				);
+			}
 		}
 		return $query_results;
 	}
@@ -72,7 +78,7 @@ class Options {
 	 * @param array $options
 	 * @return array
 	 */
-	public function get_all_options( $options ) {
+	public function get_all_options( $options = array() ) {
 
 		$defaults = $this->get_default_options();
 
