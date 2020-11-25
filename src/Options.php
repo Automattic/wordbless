@@ -26,7 +26,6 @@ class Options {
 
 		add_filter( 'wordbless_wpdb_query_results', array( $this, 'filter_query' ), 10, 2 );
 		$this->clear_cache_group();
-
 	}
 
 	/**
@@ -53,7 +52,7 @@ class Options {
 				return array(
 					(object) array(
 						'autoload' => 'no',
-					)
+					),
 				);
 			}
 		}
@@ -79,7 +78,6 @@ class Options {
 	 * @return array
 	 */
 	public function get_all_options( $options = array() ) {
-
 		$defaults = $this->get_default_options();
 
 		if ( ! is_array( $options ) ) {
@@ -115,7 +113,6 @@ class Options {
 	public function delete_option( $option ) {
 		unset( $this->options[ $option ] );
 		$this->clear_cache_group();
-
 	}
 
 	/**
@@ -133,7 +130,6 @@ class Options {
 		foreach ( array_keys( $wp_object_cache->cache['options'] ) as $key ) {
 			wp_cache_delete( $key, 'options' );
 		}
-
 	}
 
 }
