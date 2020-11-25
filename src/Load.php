@@ -23,8 +23,8 @@ class Load {
 		define( 'WP_REPAIRING', true ); // Will not try to install WordPress
 		define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
 
-		$_SERVER['SERVER_NAME'] = 'anything.com';
-		$_SERVER['HTTP_HOST']   = 'anything.com';
+		$_SERVER['SERVER_NAME'] = 'anything.example';
+		$_SERVER['HTTP_HOST']   = 'anything.example';
 
 		global $table_prefix;
 		$table_prefix = 'wp_';
