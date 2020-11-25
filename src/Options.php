@@ -9,7 +9,9 @@ use function dbless_default_options;
  */
 class Options {
 
-	use Singleton;
+	use Singleton, ClearCacheGroup;
+
+	public $cache_group = 'options';
 
 	/**
 	 * Holds the stored options
@@ -113,23 +115,6 @@ class Options {
 	public function delete_option( $option ) {
 		unset( $this->options[ $option ] );
 		$this->clear_cache_group();
-	}
-
-	/**
-	 * Clears the cache for the 'options' group
-	 *
-	 * @return void
-	 */
-	public function clear_cache_group() {
-		global $wp_object_cache;
-
-		if ( ! isset( $wp_object_cache->cache['options'] ) || ! is_array( $wp_object_cache->cache['options'] ) ) {
-			return;
-		}
-
-		foreach ( array_keys( $wp_object_cache->cache['options'] ) as $key ) {
-			wp_cache_delete( $key, 'options' );
-		}
 	}
 
 }

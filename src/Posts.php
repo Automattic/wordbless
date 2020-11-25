@@ -4,9 +4,10 @@ namespace WorDBless;
 
 class Posts {
 
-	use Singleton;
+	use Singleton, ClearCacheGroup;
 
-	public $posts = array();
+	public $posts       = array();
+	public $cache_group = 'posts';
 
 	private function __construct() {
 		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), 10, 3 );
@@ -64,6 +65,7 @@ class Posts {
 				return $post->post_author !== $author_id;
 			}
 		);
+		$this->clear_cache_group();
 	}
 
 	public function transfer_posts_authorship( $author_id_from, $author_id_to ) {
@@ -76,6 +78,7 @@ class Posts {
 			},
 			$this->posts
 		);
+		$this->clear_cache_group();
 	}
 
 }

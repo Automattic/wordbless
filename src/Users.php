@@ -4,12 +4,12 @@ namespace WorDBless;
 
 class Users {
 
-	use Singleton;
+	use Singleton, ClearCacheGroup;
 
-	public $users = array();
+	public $users       = array();
+	public $cache_group = 'users';
 
 	private function __construct() {
-
 		require_once ABSPATH . 'wp-admin/includes/schema.php';
 		populate_roles();
 
@@ -28,7 +28,6 @@ class Users {
 	 *
 	 */
 	public function insert( $result, $table, $data, $format ) {
-		wp_cache_flush();
 		global $wpdb;
 
 		if ( $wpdb->users !== $table ) {
@@ -51,7 +50,6 @@ class Users {
 	 *
 	 */
 	public function update( $result, $table, $data, $where, $format, $where_format ) {
-		wp_cache_flush();
 		global $wpdb;
 
 		if ( $wpdb->users !== $table ) {
@@ -94,7 +92,6 @@ class Users {
 	 * @return array
 	 */
 	public function filter_query( $query_results, $query ) {
-		wp_cache_flush();
 		global $wpdb;
 		$pattern = '/^SELECT \* FROM ' . preg_quote( $wpdb->users ) . ' WHERE (ID|user_nicename|user_email|user_login) = \'([^ ]+)\' LIMIT 1$/';
 		if ( 1 === preg_match( $pattern, $query, $matches ) ) {
@@ -127,7 +124,7 @@ class Users {
 	}
 
 	public function clear_all_users() {
-		wp_cache_flush();
+		$this->clear_cache_group();
 		$this->users = array();
 	}
 
