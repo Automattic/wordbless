@@ -90,7 +90,7 @@ Manipulating (creating, updating, deleting) posts and attachments will work. Fet
 * `wp_get_attachment_image`
 * and almost anything related to the manipulation of one attachment
 
-Note: Fetching posts using `WP_Query` will not work (yet)! To fetech a post, use `get_post( $id )`.
+Note: Fetching posts using `WP_Query` will not work (yet)! To fetch a post, use `get_post( $id )`.
 
 #### Users and capabilities
 
