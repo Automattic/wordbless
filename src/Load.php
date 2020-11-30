@@ -16,9 +16,6 @@ class Load {
 		if ( ! defined( 'ABSPATH' ) ) {
 			define( 'ABSPATH', __DIR__ . '/../../../../wordpress/' );
 		}
-		if ( ! defined( 'WPINC' ) ) {
-			define( 'WPINC', 'wp-includes' );
-		}
 
 		define( 'WP_REPAIRING', true ); // Will not try to install WordPress
 		define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
