@@ -32,6 +32,10 @@ class Test_Options extends BaseTestCase {
 		$this->assertEquals( null, get_option( 'testdelete' ) );
 	}
 
+	public function test_delete_non_existent() {
+		$this->assertFalse( delete_option( 'non_existent' ) );
+	}
+
 	/**
 	 * Assert that no error is triggered if you try to delete an option before any option is set.
 	 * See #16

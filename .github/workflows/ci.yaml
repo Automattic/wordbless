@@ -32,7 +32,7 @@ jobs:
         uses: "actions/checkout@v2.3.2"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.4.1"
+        uses: "shivammathur/setup-php@2.8.0"
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
@@ -43,39 +43,31 @@ jobs:
         run: "composer validate --strict"
 
       - name: "Determine composer cache directory"
-        id: "determine-composer-cache-directory"
-        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+        shell: "bash"
+        run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache PHAR files installed with phive"
         uses: "actions/cache@v2.1.0"
         with:
-          path: "~/.phive"
+          path: "${{ runner.temp }}/.phive"
           key: "php-${{ matrix.php-version }}-phive-${{ matrix.dependencies }}-${{ hashFiles('.phive/phars.xml') }}"
           restore-keys: "php-${{ matrix.php-version }}-phive-${{ matrix.dependencies }}-"
 
-      - name: "Install phive from cache"
-        run: |
-          if [ ! -r "${HOME}/.phive/phive.phar" ]; then
-            mkdir -p "${HOME}/bin" "${HOME}/.phive"
-            wget -O "${HOME}/.phive/phive.phar" "https://phar.io/releases/phive.phar"
-            wget -O "${HOME}/.phive/phive.phar.asc" "https://phar.io/releases/phive.phar.asc"
-            gpg --batch --keyserver ha.pool.sks-keyservers.net --keyserver-options timeout=30 --recv-keys 0x9D8A98B29B2D5D79 \
-              || gpg --batch --keyserver ha.pool.sks-keyservers.net --keyserver-options timeout=30 --recv-keys 0x9D8A98B29B2D5D79
-            if ! gpg --batch --verify "${HOME}/.phive/phive.phar.asc" "${HOME}/.phive/phive.phar"; then
-              echo "Invalid phive signature" 1>&2
-              rm -f "${HOME}/.phive/phive.phar"
-              exit 11
-            fi
-            rm "${HOME}/.phive/phive.phar.asc"
-          fi
-          install --verbose --mode=0755 -T -D "${HOME}/.phive/phive.phar" "${HOME}/bin/phive"
-          echo "::add-path::${HOME}/bin"
-          "${HOME}/bin/phive" install --trust-gpg-keys C00543248C87FB13,31C7E470E2138192
+      - name: "Install PHIVE"
+        uses: "szepeviktor/phive@v1"
+        with:
+          home: "${{ runner.temp }}/.phive"
+
+      - name: "Install PHP tools with PHIVE"
+        uses: "szepeviktor/phive-install@v1"
+        with:
+          home: "${{ runner.temp }}/.phive"
+          trustGpgKeys: "C00543248C87FB13,31C7E470E2138192"
 
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v2.1.0"
         with:
-          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
+          path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
           restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
 
@@ -118,7 +110,7 @@ jobs:
         uses: "actions/checkout@v2.3.2"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.4.1"
+        uses: "shivammathur/setup-php@2.8.0"
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
@@ -126,39 +118,31 @@ jobs:
           tools: "composer:v1"
 
       - name: "Determine composer cache directory"
-        id: "determine-composer-cache-directory"
-        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+        shell: "bash"
+        run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache PHAR files installed with phive"
         uses: "actions/cache@v2.1.0"
         with:
-          path: "~/.phive"
+          path: "${{ runner.temp }}/.phive"
           key: "php-${{ matrix.php-version }}-phive-${{ matrix.dependencies }}-${{ hashFiles('.phive/phars.xml') }}"
           restore-keys: "php-${{ matrix.php-version }}-phive-${{ matrix.dependencies }}-"
 
-      - name: "Install phive from cache"
-        run: |
-          if [ ! -r "${HOME}/.phive/phive.phar" ]; then
-            mkdir -p "${HOME}/bin" "${HOME}/.phive"
-            wget -O "${HOME}/.phive/phive.phar" "https://phar.io/releases/phive.phar"
-            wget -O "${HOME}/.phive/phive.phar.asc" "https://phar.io/releases/phive.phar.asc"
-            gpg --batch --keyserver ha.pool.sks-keyservers.net --keyserver-options timeout=30 --recv-keys 0x9D8A98B29B2D5D79 \
-              || gpg --batch --keyserver ha.pool.sks-keyservers.net --keyserver-options timeout=30 --recv-keys 0x9D8A98B29B2D5D79
-            if ! gpg --batch --verify "${HOME}/.phive/phive.phar.asc" "${HOME}/.phive/phive.phar"; then
-              echo "Invalid phive signature" 1>&2
-              rm -f "${HOME}/.phive/phive.phar"
-              exit 11
-            fi
-            rm "${HOME}/.phive/phive.phar.asc"
-          fi
-          install --verbose --mode=0755 -T -D "${HOME}/.phive/phive.phar" "${HOME}/bin/phive"
-          echo "::add-path::${HOME}/bin"
-          "${HOME}/bin/phive" install --trust-gpg-keys C00543248C87FB13,31C7E470E2138192
+      - name: "Install PHIVE"
+        uses: "szepeviktor/phive@v1"
+        with:
+          home: "${{ runner.temp }}/.phive"
+
+      - name: "Install PHP tools with PHIVE"
+        uses: "szepeviktor/phive-install@v1"
+        with:
+          home: "${{ runner.temp }}/.phive"
+          trustGpgKeys: "C00543248C87FB13,31C7E470E2138192"
 
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v2.1.0"
         with:
-          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
+          path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
           restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
 
@@ -211,7 +195,7 @@ jobs:
         uses: "actions/checkout@v2.3.2"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.4.1"
+        uses: "shivammathur/setup-php@2.8.0"
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
@@ -219,13 +203,13 @@ jobs:
           tools: "composer:v1"
 
       - name: "Determine composer cache directory"
-        id: "determine-composer-cache-directory"
-        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+        shell: "bash"
+        run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v2.1.0"
         with:
-          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
+          path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
           restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
 
@@ -265,7 +249,7 @@ jobs:
         uses: "actions/checkout@v2.3.2"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.4.1"
+        uses: "shivammathur/setup-php@2.8.0"
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
@@ -273,13 +257,13 @@ jobs:
           tools: "composer:v1"
 
       - name: "Determine composer cache directory"
-        id: "determine-composer-cache-directory"
-        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+        shell: "bash"
+        run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v2.1.0"
         with:
-          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
+          path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
           restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
 

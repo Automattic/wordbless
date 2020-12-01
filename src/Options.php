@@ -9,7 +9,9 @@ use function dbless_default_options;
  */
 class Options {
 
-	use Singleton;
+	use Singleton, ClearCacheGroup;
+
+	public $cache_group = 'options';
 
 	/**
 	 * Holds the stored options
@@ -26,7 +28,6 @@ class Options {
 
 		add_filter( 'wordbless_wpdb_query_results', array( $this, 'filter_query' ), 10, 2 );
 		$this->clear_cache_group();
-
 	}
 
 	/**
@@ -47,9 +48,15 @@ class Options {
 	 */
 	public function filter_query( $query_results, $query ) {
 		global $wpdb;
-		$pattern = '/^SELECT autoload FROM ' . preg_quote( $wpdb->options ) . ' WHERE option_name = [^ ]+$/';
+		$pattern = '/^SELECT autoload FROM ' . preg_quote( $wpdb->options ) . ' WHERE option_name = \'([^ ]+)\'$/';
 		if ( 1 === preg_match( $pattern, $query, $matches ) ) {
-			return array( 'yes' );
+			if ( isset( $this->get_all_options()[ $matches[1] ] ) ) {
+				return array(
+					(object) array(
+						'autoload' => 'no',
+					),
+				);
+			}
 		}
 		return $query_results;
 	}
@@ -72,8 +79,7 @@ class Options {
 	 * @param array $options
 	 * @return array
 	 */
-	public function get_all_options( $options ) {
-
+	public function get_all_options( $options = array() ) {
 		$defaults = $this->get_default_options();
 
 		if ( ! is_array( $options ) ) {
@@ -109,25 +115,6 @@ class Options {
 	public function delete_option( $option ) {
 		unset( $this->options[ $option ] );
 		$this->clear_cache_group();
-
-	}
-
-	/**
-	 * Clears the cache for the 'options' group
-	 *
-	 * @return void
-	 */
-	public function clear_cache_group() {
-		global $wp_object_cache;
-
-		if ( ! isset( $wp_object_cache->cache['options'] ) || ! is_array( $wp_object_cache->cache['options'] ) ) {
-			return;
-		}
-
-		foreach ( array_keys( $wp_object_cache->cache['options'] ) as $key ) {
-			wp_cache_delete( $key, 'options' );
-		}
-
 	}
 
 }

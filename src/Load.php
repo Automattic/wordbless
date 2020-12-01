@@ -20,6 +20,12 @@ class Load {
 		define( 'WP_REPAIRING', true ); // Will not try to install WordPress
 		define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
 
+		$_SERVER['SERVER_NAME'] = 'anything.example';
+		$_SERVER['HTTP_HOST']   = 'anything.example';
+
+		global $table_prefix;
+		$table_prefix = 'wp_';
+
 		require ABSPATH . '/wp-settings.php';
 		require_once ABSPATH . 'wp-admin/includes/admin.php';
 		if ( ! file_exists( ABSPATH . 'wp-content/uploads' ) ) {
@@ -29,6 +35,8 @@ class Load {
 		Options::init();
 		Posts::init();
 		PostMeta::init();
+		Users::init();
+		UserMeta::init();
 		WpDie::init();
 	}
 
