@@ -17,7 +17,7 @@ jobs:
   coding-standards:
     name: "Coding Standards"
 
-    runs-on: "ubuntu-latest"
+    runs-on: "ubuntu-18.04"
 
     strategy:
       matrix:
@@ -95,7 +95,7 @@ jobs:
   static-code-analysis:
     name: "Static Code Analysis"
 
-    runs-on: "ubuntu-latest"
+    runs-on: "ubuntu-18.04"
 
     strategy:
       matrix:
@@ -176,7 +176,7 @@ jobs:
   tests:
     name: "Tests"
 
-    runs-on: "ubuntu-latest"
+    runs-on: "ubuntu-18.04"
 
     strategy:
       matrix:
@@ -231,7 +231,7 @@ jobs:
   tests-old:
     name: "Tests on unsupported PHP"
 
-    runs-on: "ubuntu-latest"
+    runs-on: "ubuntu-18.04"
 
     strategy:
       matrix:
