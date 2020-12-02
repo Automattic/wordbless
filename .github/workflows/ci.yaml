@@ -216,7 +216,9 @@ jobs:
 
       - name: "Install lowest dependencies from composer.json"
         if: "matrix.dependencies == 'lowest'"
-        run: "composer require --no-interaction --no-progress --no-suggest --prefer-lowest --dev 'phpunit/phpunit:^6.5 || ^7.5 || ^9.0'"
+        run: |
+          composer require --no-update --no-interaction --no-progress --no-suggest --dev 'phpunit/phpunit:^6.5 || ^7.5 || ^9.0'
+          composer upgrade --no-interaction --no-progress --no-suggest --prefer-lowest --dev
 
       - name: "Install locked dependencies from composer.lock"
         if: "matrix.dependencies == 'locked'"
