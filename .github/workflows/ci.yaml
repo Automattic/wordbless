@@ -192,11 +192,9 @@ jobs:
           - "highest"
 
         exclude:
-          # Exclude these on PHP 8 for now, as the locked dependencies aren't good enough
+          # Exclude these on PHP 8 for now, as dependencies are locked on PHP 7
           - php-version: "8.0"
             dependencies: "locked"
-          - php-version: "8.0"
-            dependencies: "lowest"
 
     steps:
       - name: "Checkout"
@@ -223,7 +221,7 @@ jobs:
 
       - name: "Install lowest dependencies from composer.json"
         if: "matrix.dependencies == 'lowest'"
-        run: "composer require --no-interaction --no-progress --no-suggest --prefer-lowest --dev 'phpunit/phpunit:^6.5 || ^7.5 || ^9.0'"
+        run: "composer require --no-interaction --no-progress --no-suggest --prefer-lowest --dev 'phpunit/phpunit:^6.5 || ^7.5 || ^9.0' 'phar-io/manifest'"
 
       - name: "Install locked dependencies from composer.lock"
         if: "matrix.dependencies == 'locked'"
@@ -288,4 +286,6 @@ jobs:
         run: "composer update --no-interaction --no-progress --no-suggest"
 
       - name: "Run integration tests with phpunit/phpunit"
-        run: "cp -f src/dbless-wpdb.php wordpress/wp-content/db.php && vendor/bin/phpunit --colors=always"
+        run: |
+          cp -v src/dbless-wpdb.php wordpress/wp-content/db.php
+          vendor/bin/phpunit --colors=always --verbose
