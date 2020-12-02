@@ -191,6 +191,11 @@ jobs:
           - "locked"
           - "highest"
 
+        exclude:
+          # Exclude locked on PHP 8 for now, as the locked dependencies specify PHPUnit 7.5.
+          - php-version: "8.0"
+            depencencies: "locked"
+
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v2.3.2"
@@ -216,7 +221,7 @@ jobs:
 
       - name: "Install lowest dependencies from composer.json"
         if: "matrix.dependencies == 'lowest'"
-        run: "composer require --no-interaction --no-progress --no-suggest --prefer-lowest --dev 'phpunit/phpunit:^6.5 || ^7.5'"
+        run: "composer require --no-interaction --no-progress --no-suggest --prefer-lowest --dev 'phpunit/phpunit:^6.5 || ^7.5 || ^9.0'"
 
       - name: "Install locked dependencies from composer.lock"
         if: "matrix.dependencies == 'locked'"
