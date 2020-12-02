@@ -52,7 +52,7 @@ class My_Tests extends \WorDBless\BaseTestCase {
 ```
 Note WorDBless uses `@before` and `@after` annotations rather than overriding PHPUnit's `setUp` and `tearDown` methods.
 
-If you choose not to extend this base class, no problem. Just remember that WorDBless won't be set up or torn down for you.
+If you choose not to extend this base class, no problem. Just remember that WorDBless won't be set up or torn down for you. Check BaseTestCase::set_up_wordbless() and BaseTestCase::teardown_wordbless() to see how to do it for yourself.
 
 ## What will work and what will not work?
 
