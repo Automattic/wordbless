@@ -10,8 +10,10 @@ abstract class BaseTestCase extends TestCase {
 
 	/**
 	 * Runs the routine before each test is executed.
+	 *
+	 * @before
 	 */
-	public function setUp() {
+	public function set_up_wordbless() {
 		if ( ! self::$hooks_saved ) {
 			$this->_backup_hooks();
 		}
@@ -19,8 +21,10 @@ abstract class BaseTestCase extends TestCase {
 
 	/**
 	 * After a test method runs, reset any state in WordPress the test method might have changed.
+	 *
+	 * @after
 	 */
-	public function tearDown() {
+	public function tear_down_wordbless() {
 		$this->_restore_hooks();
 		Options::init()->clear_options();
 		Posts::init()->clear_all_posts();

@@ -181,6 +181,7 @@ jobs:
     strategy:
       matrix:
         php-version:
+          - "8.0"
           - "7.4"
           - "7.3"
           - "7.2"
@@ -189,6 +190,13 @@ jobs:
           - "lowest"
           - "locked"
           - "highest"
+
+        exclude:
+          # Exclude these on PHP 8 for now, as the locked dependencies aren't good enough
+          - php-version: "8.0"
+            dependencies: "locked"
+          - php-version: "8.0"
+            dependencies: "lowest"
 
     steps:
       - name: "Checkout"
@@ -215,7 +223,7 @@ jobs:
 
       - name: "Install lowest dependencies from composer.json"
         if: "matrix.dependencies == 'lowest'"
-        run: "composer require --no-interaction --no-progress --no-suggest --prefer-lowest --dev 'phpunit/phpunit:^6.5 || ^7.5'"
+        run: "composer require --no-interaction --no-progress --no-suggest --prefer-lowest --dev 'phpunit/phpunit:^6.5 || ^7.5 || ^9.0'"
 
       - name: "Install locked dependencies from composer.lock"
         if: "matrix.dependencies == 'locked'"
