@@ -192,11 +192,9 @@ jobs:
           - "highest"
 
         exclude:
-          # Exclude these on PHP 8 for now, as the locked dependencies aren't good enough
-          - php-version: "8.0"
+          # Locked dependencies require PHP 7.3+.
+          - php-version: "7.2"
             dependencies: "locked"
-          - php-version: "8.0"
-            dependencies: "lowest"
 
     steps:
       - name: "Checkout"
