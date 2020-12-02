@@ -221,7 +221,7 @@ jobs:
 
       - name: "Install lowest dependencies from composer.json"
         if: "matrix.dependencies == 'lowest'"
-        run: "composer require --no-interaction --no-progress --no-suggest --prefer-lowest --dev 'phpunit/phpunit:^6.5 || ^7.5 || ^9.0' 'phar-io/manifest'"
+        run: "composer require --no-interaction --no-progress --no-suggest --prefer-lowest --dev 'phpunit/phpunit:^6.5 || ^7.5 || ^9.0' 'phar-io/manifest:^1.0 || ^2.0'"
 
       - name: "Install locked dependencies from composer.lock"
         if: "matrix.dependencies == 'locked'"
