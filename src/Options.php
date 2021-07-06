@@ -69,7 +69,7 @@ class Options {
 	public function get_default_options() {
 		return array(
 			'siteurl' => 'http://example.org',
-			'home'     => 'http://example.org',
+			'home'    => 'http://example.org',
 		);
 	}
 
