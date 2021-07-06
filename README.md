@@ -120,7 +120,7 @@ Note: Fetching users using `WP_Users_Query` will not work! To fetch a user, use 
 
 ### Populating default options
 
-By default, only `site_url` and `home` options are populated with `http://example.org`.
+By default, only `siteurl` and `home` options are populated with `http://example.org`.
 
 If you want, you can add more options to be loaded by default. 
 

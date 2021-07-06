@@ -68,7 +68,7 @@ class Options {
 	 */
 	public function get_default_options() {
 		return array(
-			'site_url' => 'http://example.org',
+			'siteurl' => 'http://example.org',
 			'home'     => 'http://example.org',
 		);
 	}
