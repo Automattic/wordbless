@@ -48,4 +48,14 @@ class Test_Options extends BaseTestCase {
 
 	}
 
+	/**
+	 * Test that update_option changes the value of an option that has a default value.
+	 * The 'home' option has a default value. See Options::get_default_options.
+	 */
+	public function test_update_option_with_default_value() {
+		$new_url = 'http://coolsite.com';
+		update_option( 'home', $new_url );
+		$this->assertSame( $new_url, get_option( 'home', null ) );
+	}
+
 }
