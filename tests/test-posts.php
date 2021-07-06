@@ -118,6 +118,8 @@ class Test_Posts extends BaseTestCase {
 	}
 
 	public function test_untrash_post() { // depends on post meta
+		global $wp_version;
+
 		$id = wp_insert_post( array( 'post_title' => 'This is a post', 'post_status' => 'private' ) );
 		$post = get_post( $id );
 		$this->assertEquals( $id, $post->ID );
@@ -130,8 +132,14 @@ class Test_Posts extends BaseTestCase {
 
 		wp_untrash_post( $id );
 
+		if ( version_compare( $wp_version, '5.6', '>=' ) ) { // https://core.trac.wordpress.org/ticket/23022
+			$expected_status = 'draft';
+		} else {
+			$expected_status = 'private';
+		}
+
 		$post = get_post( $id );
-		$this->assertEquals( 'private', $post->post_status );
+		$this->assertEquals( $expected_status, $post->post_status );
 
 	}
 
