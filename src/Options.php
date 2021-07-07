@@ -92,10 +92,10 @@ class Options {
 		}
 
 		$all_options = array_merge(
-			$this->options,
 			$defaults,
 			$options,
-			$custom_defaults
+			$custom_defaults,
+			$this->options
 		);
 		$this->clear_cache_group();
 
