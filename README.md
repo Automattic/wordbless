@@ -126,11 +126,16 @@ If you want, you can add more options to be loaded by default.
 
 Just declare a `dbless_default_options()` function in your bootstrap and make it return an array where the keys are option names and values, options values.
 
-## Example
+## Examples
 
-See a live example here -> https://github.com/Automattic/jetpack/pull/16163
+Here's a simple example, using only few WordPress functions:
 
-### Running our CI locally
+[Jetpack Admin UI package](https://github.com/Automattic/jetpack/blob/master/projects/packages/admin-ui/tests/php)
+
+And here a more complex example, using WorDBless to test REST endpoints, create users and play with hooks:
+
+[Jetpack Backup package](https://github.com/Automattic/jetpack/blob/master/projects/packages/backup/tests/php)
+## Running our CI locally
 
 First [install phive](https://phar.io/#Install) globally on your computer.
 
