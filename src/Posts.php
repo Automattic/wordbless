@@ -35,11 +35,7 @@ class Posts {
 
 	public function insert_post( $data, $postarr, $unsanitized_postarr = array() ) {
 
-		if ( empty( $postarr['ID'] ) || 0 === $postarr['ID'] ) {
-			$post_ID = InsertId::bump_and_get();
-		} else {
-			$post_ID = $postarr['ID'];
-		}
+		$post_ID = empty( $postarr['ID'] ) ? InsertId::bump_and_get() : $postarr['ID'];
 
 		$data['ID'] = $post_ID;
 
