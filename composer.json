@@ -26,8 +26,8 @@
 		}
 	},
 	"scripts": {
-		"post-install-cmd": "php install.php",
-		"post-update-cmd": "php install.php",
+		"post-install-cmd": "php src/install.php",
+		"post-update-cmd": "php src/install.php",
 		"ci": [
 			"phive install --trust-gpg-keys C00543248C87FB13,31C7E470E2138192",
 			"@composer validate --strict",
