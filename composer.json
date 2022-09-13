@@ -21,8 +21,8 @@
 		}
 	},
 	"scripts": {
-		"post-install-cmd": "php -r \"copy('src/dbless-wpdb.php', 'wordpress/wp-content/db.php');\"",
-		"post-update-cmd": "php -r \"copy('src/dbless-wpdb.php', 'wordpress/wp-content/db.php');\"",
+		"post-install-cmd": "php install.php",
+		"post-update-cmd": "php install.php",
 		"ci": [
 			"phive install --trust-gpg-keys C00543248C87FB13,31C7E470E2138192",
 			"@composer validate --strict",
