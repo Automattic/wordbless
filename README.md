@@ -18,11 +18,12 @@ Add this script to your `composer.json`:
 
 ```json
     "scripts": {
-        "post-update-cmd": "php -r \"copy('vendor/automattic/wordbless/src/dbless-wpdb.php', 'wordpress/wp-content/db.php');\""
+        "post-install-cmd": "WorDBless\\Composer\\InstallDropin::copy",
+		"post-update-cmd": "WorDBless\\Composer\\InstallDropin::copy"
     },
 ```
 
-Alternatively, you can manually copy the file.
+Alternatively, you can manually copy `src/dbless-wpdb.php` to the `wordpress` folder created in your project under `wp-content/db.php`.
 
 ### Initialize it in your bootstrap file
 

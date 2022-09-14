@@ -22,7 +22,8 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"WorDBless\\": "src/"
+			"WorDBless\\": "src/",
+			"WorDBless\\Composer\\": "src/Composer/"
 		}
 	},
 	"scripts": {
