@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This is the installation script to copy the db dropin plugin into WordPress.
  *
@@ -14,6 +13,6 @@ class InstallDropin {
 			mkdir( 'wordpress/wp-content' );
 		}
 
-		copy( 'src/dbless-wpdb.php', 'wordpress/wp-content/db.php' );
+		copy( dirname( __DIR__ ) . '/dbless-wpdb.php', 'wordpress/wp-content/db.php' );
 	}
 }
