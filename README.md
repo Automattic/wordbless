@@ -17,10 +17,10 @@ composer require --dev automattic/wordbless
 Add this script to your `composer.json`:
 
 ```json
-    "scripts": {
-        "post-install-cmd": "WorDBless\\Composer\\InstallDropin::copy",
+	"scripts": {
+		"post-install-cmd": "WorDBless\\Composer\\InstallDropin::copy",
 		"post-update-cmd": "WorDBless\\Composer\\InstallDropin::copy"
-    },
+	},
 ```
 
 Alternatively, you can manually copy `src/dbless-wpdb.php` to the `wordpress` folder created in your project under `wp-content/db.php`.
