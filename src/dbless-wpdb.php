@@ -23,9 +23,7 @@ class Db_Less_Wpdb extends wpdb {
 	}
 
 	function _real_escape( $string ) {
-		$string = ! empty( $string ) ? $string : '';
-
-		return $this->add_placeholder_escape( $string );
+		return $this->add_placeholder_escape( is_string ( $string ) ? $string : '' );
 	}
 
 	public function print_error( $str = '' ) {
