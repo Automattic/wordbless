@@ -2,7 +2,7 @@
 
 namespace WorDBless;
 
-use PHPUnit\Framework\TestCase;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 abstract class BaseTestCase extends TestCase {
 
