@@ -47,7 +47,7 @@ jobs:
         run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache PHAR files installed with phive"
-        uses: "actions/cache@v2.1.0"
+        uses: "actions/cache@v3"
         with:
           path: "${{ runner.temp }}/.phive"
           key: "php-${{ matrix.php-version }}-phive-${{ matrix.dependencies }}-${{ hashFiles('.phive/phars.xml') }}"
@@ -65,7 +65,7 @@ jobs:
           trustGpgKeys: "C00543248C87FB13,31C7E470E2138192"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v2.1.0"
+        uses: "actions/cache@v3"
         with:
           path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -122,7 +122,7 @@ jobs:
         run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache PHAR files installed with phive"
-        uses: "actions/cache@v2.1.0"
+        uses: "actions/cache@v3"
         with:
           path: "${{ runner.temp }}/.phive"
           key: "php-${{ matrix.php-version }}-phive-${{ matrix.dependencies }}-${{ hashFiles('.phive/phars.xml') }}"
@@ -140,7 +140,7 @@ jobs:
           trustGpgKeys: "C00543248C87FB13,31C7E470E2138192"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v2.1.0"
+        uses: "actions/cache@v3"
         with:
           path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -162,7 +162,7 @@ jobs:
         run: "mkdir -p .build/phpstan"
 
       - name: "Cache cache directory for phpstan/phpstan"
-        uses: "actions/cache@v2.1.0"
+        uses: "actions/cache@v3"
         with:
           path: ".build/phpstan"
           key: "php-${{ matrix.php-version }}-phpstan-${{ github.sha }}"
@@ -213,7 +213,7 @@ jobs:
         run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v2.1.0"
+        uses: "actions/cache@v3"
         with:
           path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -269,7 +269,7 @@ jobs:
         run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v2.1.0"
+        uses: "actions/cache@v3"
         with:
           path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
