@@ -37,7 +37,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           coverage: "none"
-          tools: "composer:v2"
+          tools: "composer:v2.2"
 
       - name: "Validate composer.json and composer.lock"
         run: "composer validate --strict"
@@ -115,7 +115,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           coverage: "none"
-          tools: "composer:v2"
+          tools: "composer:v2.2"
 
       - name: "Determine composer cache directory"
         shell: "bash"
@@ -206,7 +206,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           coverage: "none"
-          tools: "composer:v2"
+          tools: "composer:v2.2"
 
       - name: "Determine composer cache directory"
         shell: "bash"
@@ -262,7 +262,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           coverage: "none"
-          tools: "composer:v2"
+          tools: "composer:v2.2"
 
       - name: "Determine composer cache directory"
         shell: "bash"
