@@ -94,7 +94,7 @@ class Db_Less_Wpdb extends wpdb {
 		 *
 		 * @param int|false    $result The number of rows affected, or false on error.
 		 * @param string       $table The database table.
-		 * @param array        $table The data to be inserted.
+		 * @param array        $data The data to be inserted.
 		 * @param array|string $format (Optional) An array of formats to be mapped to each of the value in $data.
 		 */
 		return apply_filters( 'wordbless_wpdb_replace', $result, $table, $data, $format );
@@ -135,7 +135,7 @@ class Db_Less_Wpdb extends wpdb {
 	}
 
 	public function has_cap( $db_cap ) {
-		return 1;
+		return true;
 	}
 
 	public function db_version() {

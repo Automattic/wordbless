@@ -37,7 +37,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           coverage: "none"
-          tools: "composer:v1"
+          tools: "composer:v2"
 
       - name: "Validate composer.json and composer.lock"
         run: "composer validate --strict"
@@ -115,7 +115,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           coverage: "none"
-          tools: "composer:v1"
+          tools: "composer:v2"
 
       - name: "Determine composer cache directory"
         shell: "bash"
@@ -170,7 +170,7 @@ jobs:
 
       - name: "Run phpstan/phpstan"
         run: |
-          composer require --working-dir=tools "szepeviktor/phpstan-wordpress:^0.6.2"
+          composer require --working-dir=tools "szepeviktor/phpstan-wordpress:^1.1"
           tools/vendor/bin/phpstan analyze src/
 
   tests:
@@ -206,7 +206,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           coverage: "none"
-          tools: "composer:v1"
+          tools: "composer:v2"
 
       - name: "Determine composer cache directory"
         shell: "bash"
@@ -262,7 +262,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           coverage: "none"
-          tools: "composer:v1"
+          tools: "composer:v2"
 
       - name: "Determine composer cache directory"
         shell: "bash"
