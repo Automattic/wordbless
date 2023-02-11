@@ -29,10 +29,10 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.3.2"
+        uses: "actions/checkout@v3"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.8.0"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
@@ -107,10 +107,10 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.3.2"
+        uses: "actions/checkout@v3"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.8.0"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
@@ -198,10 +198,10 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.3.2"
+        uses: "actions/checkout@v3"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.8.0"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
@@ -254,10 +254,10 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.3.2"
+        uses: "actions/checkout@v3"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.8.0"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
