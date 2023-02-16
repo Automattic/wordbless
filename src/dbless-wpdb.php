@@ -141,6 +141,10 @@ class Db_Less_Wpdb extends wpdb {
 	public function db_version() {
 		return '10';
 	}
+
+	public function db_server_info() {
+		return false;
+	}
 }
 
 global $wpdb;
