@@ -8,4 +8,3 @@ parameters:
         - tests/phpstan/bootstrap.php
         - vendor/autoload.php
     ignoreErrors:
-        - '#^Function apply_filters(_ref_array)? invoked with [34567] parameters, 2 required\.$#'

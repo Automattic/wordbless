@@ -1,8 +1,8 @@
 {
 	"name": "automattic/wordbless",
-	"type": "wordpress-dropin",
 	"description": "WorDBless allows you to use WordPress core functions in your PHPUnit tests without having to set up a database and the whole WordPress environment",
 	"license": "GPL-2.0-or-later",
+	"type": "wordpress-dropin",
 	"authors": [
 		{
 			"name": "Automattic Inc."
@@ -16,15 +16,15 @@
 	"require-dev": {
 		"phpunit/phpunit": "^5.7 || ^6.5 || ^7.5 || ^9.5"
 	},
-	"config": {
-		"allow-plugins": {
-			"roots/wordpress-core-installer": true
-		}
-	},
 	"autoload": {
 		"psr-4": {
 			"WorDBless\\": "src/",
 			"WorDBless\\Composer\\": "src/Composer/"
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"roots/wordpress-core-installer": true
 		}
 	},
 	"scripts": {
@@ -34,10 +34,10 @@
 			"phive install --trust-gpg-keys C00543248C87FB13,31C7E470E2138192",
 			"@composer validate --strict",
 			"tools/composer-normalize normalize --dry-run",
-			"@composer require --working-dir=tools 'wp-coding-standards/wpcs:^2.3.0'",
+			"@composer require --working-dir=tools --dev 'wp-coding-standards/wpcs:^2.3.0'",
 			"tools/phpcs --config-set installed_paths tools/vendor/wp-coding-standards/wpcs",
 			"tools/phpcs -s --standard=WordPress-Core --exclude=WordPress.Files.FileName src/",
-			"@composer require --working-dir=tools 'szepeviktor/phpstan-wordpress:^0.6.2'",
+			"@composer require --working-dir=tools --dev 'szepeviktor/phpstan-wordpress:^1.1'",
 			"tools/vendor/bin/phpstan analyze --memory-limit=2G src/",
 			"@phpunit"
 		],

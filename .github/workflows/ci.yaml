@@ -17,7 +17,7 @@ jobs:
   coding-standards:
     name: "Coding Standards"
 
-    runs-on: "ubuntu-18.04"
+    runs-on: "ubuntu-20.04"
 
     strategy:
       matrix:
@@ -29,15 +29,15 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.3.2"
+        uses: "actions/checkout@v3"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.8.0"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           coverage: "none"
-          tools: "composer:v1"
+          tools: "composer:2.2"
 
       - name: "Validate composer.json and composer.lock"
         run: "composer validate --strict"
@@ -47,7 +47,7 @@ jobs:
         run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache PHAR files installed with phive"
-        uses: "actions/cache@v2.1.0"
+        uses: "actions/cache@v3"
         with:
           path: "${{ runner.temp }}/.phive"
           key: "php-${{ matrix.php-version }}-phive-${{ matrix.dependencies }}-${{ hashFiles('.phive/phars.xml') }}"
@@ -65,7 +65,7 @@ jobs:
           trustGpgKeys: "C00543248C87FB13,31C7E470E2138192"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v2.1.0"
+        uses: "actions/cache@v3"
         with:
           path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -95,7 +95,7 @@ jobs:
   static-code-analysis:
     name: "Static Code Analysis"
 
-    runs-on: "ubuntu-18.04"
+    runs-on: "ubuntu-20.04"
 
     strategy:
       matrix:
@@ -107,22 +107,22 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.3.2"
+        uses: "actions/checkout@v3"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.8.0"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           coverage: "none"
-          tools: "composer:v1"
+          tools: "composer:2.2"
 
       - name: "Determine composer cache directory"
         shell: "bash"
         run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache PHAR files installed with phive"
-        uses: "actions/cache@v2.1.0"
+        uses: "actions/cache@v3"
         with:
           path: "${{ runner.temp }}/.phive"
           key: "php-${{ matrix.php-version }}-phive-${{ matrix.dependencies }}-${{ hashFiles('.phive/phars.xml') }}"
@@ -140,7 +140,7 @@ jobs:
           trustGpgKeys: "C00543248C87FB13,31C7E470E2138192"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v2.1.0"
+        uses: "actions/cache@v3"
         with:
           path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -162,7 +162,7 @@ jobs:
         run: "mkdir -p .build/phpstan"
 
       - name: "Cache cache directory for phpstan/phpstan"
-        uses: "actions/cache@v2.1.0"
+        uses: "actions/cache@v3"
         with:
           path: ".build/phpstan"
           key: "php-${{ matrix.php-version }}-phpstan-${{ github.sha }}"
@@ -170,13 +170,13 @@ jobs:
 
       - name: "Run phpstan/phpstan"
         run: |
-          composer require --working-dir=tools "szepeviktor/phpstan-wordpress:^0.6.2"
+          composer require --working-dir=tools "szepeviktor/phpstan-wordpress:^1.1"
           tools/vendor/bin/phpstan analyze src/
 
   tests:
     name: "Tests"
 
-    runs-on: "ubuntu-18.04"
+    runs-on: "ubuntu-20.04"
 
     strategy:
       matrix:
@@ -198,22 +198,22 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.3.2"
+        uses: "actions/checkout@v3"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.8.0"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           coverage: "none"
-          tools: "composer:v1"
+          tools: "composer:2.2"
 
       - name: "Determine composer cache directory"
         shell: "bash"
         run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v2.1.0"
+        uses: "actions/cache@v3"
         with:
           path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -239,7 +239,7 @@ jobs:
   tests-old:
     name: "Tests on unsupported PHP"
 
-    runs-on: "ubuntu-18.04"
+    runs-on: "ubuntu-20.04"
 
     strategy:
       matrix:
@@ -254,22 +254,22 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.3.2"
+        uses: "actions/checkout@v3"
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@2.8.0"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           coverage: "none"
-          tools: "composer:v1"
+          tools: "composer:2.2"
 
       - name: "Determine composer cache directory"
         shell: "bash"
         run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v2.1.0"
+        uses: "actions/cache@v3"
         with:
           path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
