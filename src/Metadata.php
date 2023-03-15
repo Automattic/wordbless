@@ -70,18 +70,24 @@ class Metadata {
 	}
 
 	public function get( $check, $object_id, $meta_key, $single ) {
-		$check = array();
 		if ( isset( $this->meta[ $object_id ] ) ) {
-			foreach ( $this->meta[ $object_id ] as $meta ) {
-				if ( isset( $meta['meta_key'] ) && $meta_key === $meta['meta_key'] ) {
-					$check[] = maybe_unserialize( $meta['meta_value'] );
-					if ( $single ) {
-						break;
-					}
-				}
+			$obj_meta = array_reduce(
+				$this->meta[ $object_id ],
+				function ( $all_meta, $meta ) {
+					$all_meta[ $meta['meta_key' ] ] = array_merge( $all_meta[ $meta['meta_key'] ] ?? [], [ $meta['meta_value'] ] );
+					return $all_meta;
+				},
+			);
+
+			if ( empty( $meta_key ) ) {
+				return $obj_meta;
+			}
+
+			if ( isset( $obj_meta[ $meta_key ] ) ) {
+				return $single ? array_slice( $obj_meta[ $meta_key ], 0, 1 ) : $obj_meta[ $meta_key ];
 			}
 		}
-		if ( empty( $check ) && $single ) {
+		if ( $single ) {
 			$check = array( '' ); // Ensure an empty string is returned when meta is not found.
 		}
 		return $check;
