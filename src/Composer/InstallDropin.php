@@ -9,7 +9,10 @@ namespace WorDBless\Composer;
 
 class InstallDropin {
 	public static function copy() {
-		if ( ! is_dir( 'wordpress/wp-content' ) ) {
+		if ( ! is_dir( 'wordpress' ) ) {
+			mkdir( 'wordpress' );
+		}
+		if ( ! is_dir(  'wordpress/wp-content' ) ) {
 			mkdir( 'wordpress/wp-content' );
 		}
 
