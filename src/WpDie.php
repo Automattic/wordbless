@@ -23,7 +23,7 @@ class WpDie {
 		}
 	}
 
-	public function change_handler( $function ) {
+	public function change_handler() {
 		return array( $this, 'handler' );
 	}
 
