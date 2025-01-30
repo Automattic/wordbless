@@ -5,10 +5,10 @@ name: "CI"
 on:
   pull_request:
     branches:
-      - "master"
+      - "trunk"
   push:
     branches:
-      - "master"
+      - "trunk"
 
 env:
   PHP_EXTENSIONS: "mbstring"
