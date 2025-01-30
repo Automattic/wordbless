@@ -10,7 +10,7 @@
 class Db_Less_Wpdb extends wpdb {
 
 	public function __construct() {
-		$this->insert_id ++;
+		++$this->insert_id;
 		return;
 	}
 

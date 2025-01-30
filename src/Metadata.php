@@ -22,7 +22,6 @@ class Metadata {
 
 		add_filter( "update_{$this->meta_type}_metadata", array( $this, 'update' ), 10, 5 );
 		add_filter( "update_{$this->meta_type}_metadata_by_mid", array( $this, 'update_by_mid' ), 10, 4 );
-
 	}
 
 	public function key_exists_for_object( $meta_key, $object_id ) {
@@ -37,7 +36,6 @@ class Metadata {
 		}
 
 		return false;
-
 	}
 
 	public function add( $check, $object_id, $meta_key, $meta_value, $unique ) {
@@ -66,7 +64,6 @@ class Metadata {
 		do_action( "added_{$this->meta_type}_meta", $mid, $object_id, $meta_key, $_meta_value );
 
 		return $mid;
-
 	}
 
 	public function get( $check, $object_id, $meta_key, $single ) {
@@ -103,7 +100,6 @@ class Metadata {
 		}
 
 		return false;
-
 	}
 
 	public function get_by_mid( $check, $mid ) {
@@ -127,7 +123,6 @@ class Metadata {
 		}
 
 		return $check;
-
 	}
 
 	public function delete_for_object( $object_id, $meta_key, $meta_value ) {
@@ -156,7 +151,6 @@ class Metadata {
 		$this->meta[ $object_id ] = array_values( $this->meta[ $object_id ] );
 
 		return $found;
-
 	}
 
 	public function delete_by_mid( $check, $mid ) {
@@ -221,7 +215,6 @@ class Metadata {
 		}
 
 		return $check;
-
 	}
 
 	public function update_by_mid( $check, $mid, $meta_value, $meta_key ) {
@@ -271,5 +264,4 @@ class Metadata {
 			unset( $this->meta[ $object_id ] );
 		}
 	}
-
 }

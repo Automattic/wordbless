@@ -14,5 +14,4 @@ class UserMeta {
 	}
 
 	private function __construct() {}
-
 }

@@ -120,5 +120,4 @@ abstract class BaseTestCase extends TestCase {
 			}
 		}
 	}
-
 }

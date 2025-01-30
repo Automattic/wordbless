@@ -24,5 +24,4 @@ trait ClearCacheGroup {
 			wp_cache_delete( $key, $this->cache_group );
 		}
 	}
-
 }

@@ -41,6 +41,9 @@
 			"tools/vendor/bin/phpstan analyze --memory-limit=2G src/",
 			"@phpunit"
 		],
+		"fix-cs": [
+			"tools/vendor/bin/phpcbf -s --standard=WordPress-Core --exclude=WordPress.Files.FileName src/"
+		],
 		"phpunit": [
 			"@composer install",
 			"./vendor/phpunit/phpunit/phpunit --colors=always"

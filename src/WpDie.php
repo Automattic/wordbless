@@ -36,5 +36,4 @@ class WpDie {
 		$args['exit'] = false;
 		${$this->core_handlers[ $current_filter ]}( $message, $title, $args );
 	}
-
 }

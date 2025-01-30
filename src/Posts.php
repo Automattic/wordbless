@@ -4,7 +4,8 @@ namespace WorDBless;
 
 class Posts {
 
-	use Singleton, ClearCacheGroup;
+	use Singleton;
+	use ClearCacheGroup;
 
 	public $posts       = array();
 	public $cache_group = 'posts';
@@ -57,7 +58,7 @@ class Posts {
 	public function clear_all_posts_from_author( $author_id ) {
 		$this->posts = array_filter(
 			$this->posts,
-			function( $post ) use ( $author_id ) {
+			function ( $post ) use ( $author_id ) {
 				return $post->post_author !== $author_id;
 			}
 		);
@@ -66,7 +67,7 @@ class Posts {
 
 	public function transfer_posts_authorship( $author_id_from, $author_id_to ) {
 		$this->posts = array_map(
-			function( $post ) use ( $author_id_from, $author_id_to ) {
+			function ( $post ) use ( $author_id_from, $author_id_to ) {
 				if ( $post->post_author === $author_id_from ) {
 					$post->post_author = $author_id_to;
 				}
@@ -76,5 +77,4 @@ class Posts {
 		);
 		$this->clear_cache_group();
 	}
-
 }
