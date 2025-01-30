@@ -14,5 +14,4 @@ class PostMeta {
 	}
 
 	private function __construct() {}
-
 }

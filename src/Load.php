@@ -39,7 +39,4 @@ class Load {
 		UserMeta::init();
 		WpDie::init();
 	}
-
 }
-
-

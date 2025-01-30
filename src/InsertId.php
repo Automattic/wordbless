@@ -24,5 +24,4 @@ class InsertId {
 	public static function bump_and_get() {
 		return ++ self::$id;
 	}
-
 }

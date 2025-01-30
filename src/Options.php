@@ -9,7 +9,8 @@ use function dbless_default_options;
  */
 class Options {
 
-	use Singleton, ClearCacheGroup;
+	use Singleton;
+	use ClearCacheGroup;
 
 	public $cache_group = 'options';
 
@@ -116,5 +117,4 @@ class Options {
 		unset( $this->options[ $option ] );
 		$this->clear_cache_group();
 	}
-
 }
