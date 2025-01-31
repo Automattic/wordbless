@@ -137,7 +137,7 @@ jobs:
         uses: "szepeviktor/phive-install@v1"
         with:
           home: "${{ runner.temp }}/.phive"
-          trustGpgKeys: "C00543248C87FB13,31C7E470E2138192"
+          trustGpgKeys: "C00543248C87FB13,31C7E470E2138192,A978220305CD5C32"
 
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v3"
