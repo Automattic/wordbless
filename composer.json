@@ -25,13 +25,15 @@
 	"config": {
 		"allow-plugins": {
 			"roots/wordpress-core-installer": true
+		},
+		"platform": {
 		}
 	},
 	"scripts": {
 		"post-install-cmd": "WorDBless\\Composer\\InstallDropin::copy",
 		"post-update-cmd": "WorDBless\\Composer\\InstallDropin::copy",
 		"ci": [
-			"phive install --trust-gpg-keys C00543248C87FB13,31C7E470E2138192",
+			"phive install --trust-gpg-keys C00543248C87FB13,31C7E470E2138192,A978220305CD5C32",
 			"@composer validate --strict",
 			"tools/composer-normalize normalize --dry-run",
 			"@composer require --working-dir=tools --dev 'wp-coding-standards/wpcs:^3.1.0' 'phpcsstandards/phpcsutils:^1.0' 'phpcsstandards/phpcsextra:^1.0'",
