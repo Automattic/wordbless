@@ -1,7 +1,12 @@
-<phpunit bootstrap="tests/bootstrap.php" backupGlobals="false" colors="true">
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false" colors="true">
     <testsuites>
         <testsuite name="general">
             <directory prefix="test" suffix=".php">tests</directory>
+            <exclude>tests/test-uploads.php</exclude>
+        </testsuite>
+        <testsuite name="uploads">
+            <file>tests/test-uploads.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
