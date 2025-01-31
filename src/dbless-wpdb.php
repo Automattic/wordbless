@@ -143,7 +143,7 @@ class Db_Less_Wpdb extends wpdb {
 	}
 
 	public function db_server_info() {
-		return false;
+		return '';
 	}
 }
 
