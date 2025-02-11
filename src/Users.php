@@ -4,7 +4,8 @@ namespace WorDBless;
 
 class Users {
 
-	use Singleton, ClearCacheGroup;
+	use Singleton;
+	use ClearCacheGroup;
 
 	public $users       = array();
 	public $cache_group = 'users';
@@ -67,7 +68,6 @@ class Users {
 		}
 
 		return $result;
-
 	}
 
 	public function delete( $id, $reassign ) {
@@ -81,7 +81,6 @@ class Users {
 		UserMeta::init()->clear_all_meta_for_object( $id );
 
 		unset( $this->users[ $id ] );
-
 	}
 
 	/**
@@ -111,7 +110,7 @@ class Users {
 		} elseif ( 'ID' !== $field ) {
 			$filtered = array_filter(
 				$this->users,
-				function( $user ) use ( $field, $value ) {
+				function ( $user ) use ( $field, $value ) {
 					return isset( $user[ $field ] ) && $user[ $field ] === $value;
 				}
 			);
@@ -127,5 +126,4 @@ class Users {
 		$this->clear_cache_group();
 		$this->users = array();
 	}
-
 }

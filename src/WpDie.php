@@ -23,7 +23,7 @@ class WpDie {
 		}
 	}
 
-	public function change_handler( $function ) {
+	public function change_handler() {
 		return array( $this, 'handler' );
 	}
 
@@ -36,5 +36,4 @@ class WpDie {
 		$args['exit'] = false;
 		${$this->core_handlers[ $current_filter ]}( $message, $title, $args );
 	}
-
 }
