@@ -19,7 +19,11 @@ class Load {
 
 		define( 'WP_REPAIRING', true ); // Will not try to install WordPress
 		define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
-
+		if ( ! defined( 'UPLOADS' ) ) {
+			( defined( 'dbless_UPLOADS' ) )
+			? define( 'UPLOADS', WP_CONTENT_DIR . '/' . constant( '\dbless_UPLOADS' ) )
+			: define( 'UPLOADS', WP_CONTENT_DIR . '/uploads' );
+		}
 		$_SERVER['SERVER_NAME'] = 'anything.example';
 		$_SERVER['HTTP_HOST']   = 'anything.example';
 
@@ -28,8 +32,9 @@ class Load {
 
 		require ABSPATH . '/wp-settings.php';
 		require_once ABSPATH . 'wp-admin/includes/admin.php';
-		if ( ! file_exists( ABSPATH . 'wp-content/uploads' ) ) {
-			mkdir( ABSPATH . 'wp-content/uploads' );
+		// UPLOADS is defined by the time we get here, via a bootstrap.php or the code block above.
+		if ( ! file_exists( UPLOADS ) ) { // @phpstan-ignore constant.notFound
+			mkdir( UPLOADS ); // @phpstan-ignore constant.notFound
 		}
 
 		Options::init();

@@ -237,4 +237,6 @@ jobs:
         run: "composer update --no-interaction --no-progress --no-suggest"
 
       - name: "Run integration tests with phpunit/phpunit"
-        run: "cp -f src/dbless-wpdb.php wordpress/wp-content/db.php && vendor/bin/phpunit --colors=always"
+        run: |
+          cp -f src/dbless-wpdb.php wordpress/wp-content/db.php
+          composer run-script phpunit

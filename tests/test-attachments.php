@@ -35,26 +35,34 @@ class Test_Attachments extends BaseTestCase {
 	}
 
 	public function test_add_attachment() {
-		$id = $this->create_upload_object( TESTSPATH . '/wp-logo.jpg' );
-		$this->assertTrue( is_int( $id ) );
-		$attachment = get_post( $id );
-		$this->assertEquals( 'attachment', $attachment->post_type );
+		$filename = TESTSPATH . '/wp-logo.jpg';
+		$contents = file_get_contents($filename);
+
+		// Add the attachment
+		$upload = wp_upload_bits(basename($filename), null, $contents);
+
+		$this->assertArrayHasKey('file', $upload, 'Upload result should contain "file" key');
+		$this->assertTrue(file_exists($upload['file']), 'Uploaded file should exist');
+
+		$id = $this->create_upload_object($filename);
+		$this->assertTrue(is_int($id));
+		$attachment = get_post($id);
+		$this->assertEquals('attachment', $attachment->post_type);
 	}
 
 	public function test_add_attachment_with_parent() {
-		$id = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+		$id = wp_insert_post(array('post_title' => 'Post 1'));
 
-		$attachment_id = $this->create_upload_object( TESTSPATH . '/wp-logo.jpg', $id );
+		// Debug the upload in create_upload_object
+		$attachment_id = $this->create_upload_object(TESTSPATH . '/wp-logo.jpg', $id);
 
-		$attachment = get_post( $attachment_id );
+		$attachment = get_post($attachment_id);
 
-		$this->assertEquals( 'attachment', $attachment->post_type );
-		$this->assertEquals( $id, $attachment->post_parent );
+		$this->assertEquals('attachment', $attachment->post_type);
+		$this->assertEquals($id, $attachment->post_parent);
 
-		$this->assertTrue( wp_attachment_is_image( $attachment_id ) );
-
-		$this->assertStringStartsWith( '<img', wp_get_attachment_image( $attachment_id ) );
-
+		$this->assertTrue(wp_attachment_is_image($attachment_id));
+		$this->assertStringStartsWith('<img', wp_get_attachment_image($attachment_id));
 	}
 
 

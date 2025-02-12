@@ -14,9 +14,16 @@ abstract class Test_Setup_Teardown_Base extends BaseTestCase {
 		$this->assertTrue( $this->setup_called, static::class . ' setup called?' );
 		$this->assertTrue( $this->custom_setup_called, static::class . ' custom setup called?' );
 		$this->assertNotEmpty( self::$hooks_saved, 'WorDBless setup called?' );
-
 		return true;
 	}
+
+	/**
+	 * This verifies that the default uploads directory is set correctly, as opposed to the custom one.
+	 * @covers Load::load
+	 */
+	public function test_default_uploads_directory() {
+        $this->assertEquals(WP_CONTENT_DIR . '/uploads', \UPLOADS);
+    }
 
 	/**
 	 * @depends test_setup_called
