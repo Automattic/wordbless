@@ -39,7 +39,7 @@ abstract class BaseTestCase extends TestCase {
 	 * @return void
 	 */
 	public function clear_uploads() {
-		$uploads_folder = ABSPATH . '/wp-content/uploads';
+		$uploads_folder = ABSPATH . UPLOADS;
 		$scan           = glob( rtrim( $uploads_folder, '/' ) . '/*' );
 
 		foreach ( $scan as $path ) {
