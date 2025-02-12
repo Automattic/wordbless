@@ -33,8 +33,8 @@ class Load {
 		require ABSPATH . '/wp-settings.php';
 		require_once ABSPATH . 'wp-admin/includes/admin.php';
 		// UPLOADS is defined by the time we get here, via a bootstrap.php or the code block above.
-		if ( ! file_exists( UPLOADS ) ) { // @phpstan-ignore constant.notFound
-			mkdir( UPLOADS ); // @phpstan-ignore constant.notFound
+		if ( ! file_exists( ABSPATH . UPLOADS ) ) { // @phpstan-ignore constant.notFound
+			mkdir( ABSPATH . UPLOADS ); // @phpstan-ignore constant.notFound
 		}
 
 		Options::init();

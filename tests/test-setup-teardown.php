@@ -22,8 +22,16 @@ abstract class Test_Setup_Teardown_Base extends BaseTestCase {
 	 * @covers Load::load
 	 */
 	public function test_default_uploads_directory() {
-        $this->assertEquals(WP_CONTENT_DIR . '/uploads', \UPLOADS);
+        $this->assertEquals(WP_CONTENT_DIR . '/uploads', ABSPATH . UPLOADS);
     }
+
+	/**
+	 * This verifies that WordPress sees the default uploads directory.
+	 * @covers Load::load
+	 */
+	public function test_default_uploads_directory_is_recognized() {
+		$this->assertEquals( wp_upload_dir()['path'], ABSPATH . UPLOADS);
+	}
 
 	/**
 	 * @depends test_setup_called
