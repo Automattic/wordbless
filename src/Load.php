@@ -21,8 +21,8 @@ class Load {
 		define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
 		if ( ! defined( 'UPLOADS' ) ) {
 			( defined( 'dbless_UPLOADS' ) )
-			? define( 'UPLOADS', WP_CONTENT_DIR . '/' . constant( '\dbless_UPLOADS' ) )
-			: define( 'UPLOADS', WP_CONTENT_DIR . '/uploads' );
+			? define( 'UPLOADS', 'wp-content/' . constant( '\dbless_UPLOADS' ) )
+			: define( 'UPLOADS', 'wp-content/uploads' );
 		}
 		$_SERVER['SERVER_NAME'] = 'anything.example';
 		$_SERVER['HTTP_HOST']   = 'anything.example';
