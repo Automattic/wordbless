@@ -51,6 +51,15 @@ abstract class Test_Setup_Teardown_Base extends BaseTestCase {
 	}
 
 	/**
+	 * This verifies that the $wpdb global is an instance of Db_Less_Wpdb.
+	 * @covers Load::load
+	 */
+	public function test_wpdb_is_dbless_instance() {
+		global $wpdb;
+		$this->assertInstanceOf( 'Db_Less_Wpdb', $wpdb );
+	}
+
+	/**
 	 * @depends test_setup_called
 	 */
 	public function test_teardown_called( $setup ) {

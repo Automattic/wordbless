@@ -152,65 +152,13 @@ if ( defined( 'DB_ENGINE' ) && DB_ENGINE === 'dbless' ) {
 	global $wpdb;
 	$wpdb = new Db_Less_Wpdb();
 } elseif ( defined( 'DB_ENGINE' ) && DB_ENGINE === 'sqlite' ) {
-	class WP_SQLite_DB extends wpdb {
-		/**
-		 * Constructor
-		 */
-		public function __construct() {
-			parent::__construct( '', '', '', '' );
-		}
+	define( 'SQLITE_DB_DROPIN_VERSION', '1.8.0' );
 
-		/**
-		 * Connect to the database
-		 */
-		public function db_connect( $allow_bail = true ) {
-			return true;
-		}
-
-		/**
-		 * Check the database connection
-		 */
-		public function check_connection( $allow_bail = true ) {
-			return true;
-		}
-
-		/**
-		 * Perform a database query
-		 */
-		public function query( $query ) {
-			// For now, just return true
-			return true;
-		}
-
-		/**
-		 * Get the database version
-		 */
-		public function db_version() {
-			return '3.0.0';
-		}
-
-		/**
-		 * Get the database server info
-		 */
-		public function db_server_info() {
-			return 'SQLite';
-		}
-
-		/**
-		 * Check if the database has a specific capability
-		 */
-		public function has_cap( $db_cap ) {
-			return true;
-		}
-
-		/**
-		 * Escaping temporary fix
-		 */
-		public function _real_escape( $data ) {
-			return addslashes( $data );
-		}
+	// Constant for backward compatibility.
+	if ( ! defined( 'DATABASE_TYPE' ) ) {
+		define( 'DATABASE_TYPE', 'sqlite' );
 	}
 
-	global $wpdb;
-	$wpdb = new WP_SQLite_DB();
+	// Require the implementation from the plugin, which sets up the $wpdb object.
+	require_once WP_CONTENT_DIR . '/plugins/wp-sqlite-integration/wp-includes/sqlite/db.php';
 }

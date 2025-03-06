@@ -20,4 +20,12 @@ class Test_SQLite extends BaseTestCase {
 		$this->assertFalse( class_exists( 'Db_Less_Wpdb' ), 'Db_Less_Wpdb class should not be loaded' );
 	}
 
+	/**
+	 * Test that the $wpdb global is an instance of WP_SQLite_DB
+	 */
+	public function test_wpdb_is_sqlite_instance() {
+		global $wpdb;
+		$this->assertInstanceOf( 'WP_SQLite_DB', $wpdb );
+	}
+
 }
