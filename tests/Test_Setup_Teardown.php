@@ -43,6 +43,14 @@ abstract class Test_Setup_Teardown_Base extends BaseTestCase {
 	}
 
 	/**
+	 * This verifies that the Db_Less_Wpdb class is loaded and available.
+	 * @covers Load::load
+	 */
+	public function test_db_less_wpdb_exists() {
+		$this->assertTrue( class_exists( 'Db_Less_Wpdb' ), 'Db_Less_Wpdb class should be loaded' );
+	}
+
+	/**
 	 * @depends test_setup_called
 	 */
 	public function test_teardown_called( $setup ) {

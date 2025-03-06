@@ -12,4 +12,12 @@ class Test_SQLite extends BaseTestCase {
 		$this->assertEquals( 'sqlite', DB_ENGINE, 'DB_ENGINE should be set to "sqlite"' );
 	}
 
+	/**
+	 * Test that the SQLite database class is loaded and Db_Less_Wpdb is not.
+	 */
+	public function test_sqlite_database_class() {
+		$this->assertTrue( class_exists( 'WP_SQLite_DB' ), 'WP_SQLite_DB class should be loaded' );
+		$this->assertFalse( class_exists( 'Db_Less_Wpdb' ), 'Db_Less_Wpdb class should not be loaded' );
+	}
+
 }
