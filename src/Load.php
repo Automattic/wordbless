@@ -2,6 +2,10 @@
 
 namespace WorDBless;
 
+use PDO;
+use PDOException;
+use WP_User;
+use WorDBless\Sqlite;
 /**
  * Loads WorDBless
  */
@@ -46,11 +50,15 @@ class Load {
 			mkdir( ABSPATH . UPLOADS ); // @phpstan-ignore constant.notFound
 		}
 
-		Options::init();
-		Posts::init();
-		PostMeta::init();
-		Users::init();
-		UserMeta::init();
-		WpDie::init();
+		if ( DB_ENGINE === 'dbless' ) {
+			Options::init();
+			Posts::init();
+			PostMeta::init();
+			Users::init();
+			UserMeta::init();
+			WpDie::init();
+		} elseif ( DB_ENGINE === 'sqlite' ) {
+			Sqlite::init();
+		}
 	}
 }
