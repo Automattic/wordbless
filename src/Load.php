@@ -12,7 +12,7 @@ class Load {
 	 *
 	 * @return void
 	 */
-	public static function load() {
+	public static function load( $db_engine = 'dbless' ) {
 		if ( ! defined( 'ABSPATH' ) ) {
 			define( 'ABSPATH', __DIR__ . '/../../../../wordpress/' );
 		}
@@ -23,6 +23,15 @@ class Load {
 			( defined( 'dbless_UPLOADS' ) )
 			? define( 'UPLOADS', 'wp-content/' . constant( '\dbless_UPLOADS' ) )
 			: define( 'UPLOADS', 'wp-content/uploads' );
+		}
+
+		if ( ! defined( 'DB_ENGINE' ) ) {
+			// normalize to one of the following: 'dbless', 'mysql', 'sqlite'
+			$db_engine = strtolower( $db_engine );
+			if ( ! in_array( $db_engine, array( 'dbless', 'mysql', 'sqlite' ) ) ) {
+				$db_engine = 'dbless';
+			}
+			define( 'DB_ENGINE', $db_engine );
 		}
 		$_SERVER['SERVER_NAME'] = 'anything.example';
 		$_SERVER['HTTP_HOST']   = 'anything.example';

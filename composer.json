@@ -50,7 +50,8 @@
 		"phpunit": [
 			"@composer install",
 			"./vendor/phpunit/phpunit/phpunit --colors=always --bootstrap tests/bootstrap.php --testsuite general",
-			"./vendor/phpunit/phpunit/phpunit --colors=always --bootstrap tests/bootstrap-uploads.php --testsuite uploads"
+			"./vendor/phpunit/phpunit/phpunit --colors=always --bootstrap tests/bootstrap-uploads.php --testsuite uploads",
+			"./vendor/phpunit/phpunit/phpunit --colors=always --bootstrap tests/bootstrap-sqlite.php --testsuite sqlite"
 		]
 	}
 }

@@ -4,9 +4,13 @@
         <testsuite name="general">
             <directory prefix="test" suffix=".php">tests</directory>
             <exclude>tests/test-uploads.php</exclude>
+            <exclude>tests/Test_SQLite.php</exclude>
         </testsuite>
         <testsuite name="uploads">
             <file>tests/test-uploads.php</file>
+        </testsuite>
+        <testsuite name="sqlite">
+            <file>tests/Test_SQLite.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

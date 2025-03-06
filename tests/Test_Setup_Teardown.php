@@ -34,6 +34,15 @@ abstract class Test_Setup_Teardown_Base extends BaseTestCase {
 	}
 
 	/**
+	 * This verifies that the default DB_ENGINE is set to 'dbless'.
+	 * @covers Load::load
+	 */
+	public function test_default_db_engine() {
+		$this->assertTrue( defined( 'DB_ENGINE' ), 'DB_ENGINE constant should be defined' );
+		$this->assertEquals( 'dbless', DB_ENGINE, 'DB_ENGINE should be set to "dbless" by default' );
+	}
+
+	/**
 	 * @depends test_setup_called
 	 */
 	public function test_teardown_called( $setup ) {
