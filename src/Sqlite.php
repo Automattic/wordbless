@@ -60,7 +60,7 @@ class Sqlite {
 			update_option( 'siteurl', 'http://anything.example' );
 			update_option( 'home', 'http://anything.example' );
 			$user_id = wp_create_user( 'admin', 'password', 'admin@example.com' );
-			$user = new WP_User( $user_id );
+			$user    = new WP_User( $user_id );
 			$user->set_role( 'administrator' );
 			wp_install_defaults( $user_id );
 			wp_install_maybe_enable_pretty_permalinks();

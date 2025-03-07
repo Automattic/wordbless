@@ -32,7 +32,7 @@ class Load {
 		if ( ! defined( 'DB_ENGINE' ) ) {
 			// normalize to one of the following: 'dbless', 'mysql', 'sqlite'
 			$db_engine = strtolower( $db_engine );
-			if ( ! in_array( $db_engine, array( 'dbless', 'mysql', 'sqlite' ) ) ) {
+			if ( ! in_array( $db_engine, array( 'dbless', 'mysql', 'sqlite' ), true ) ) {
 				$db_engine = 'dbless';
 			}
 			define( 'DB_ENGINE', $db_engine );
