@@ -39,7 +39,7 @@ class InstallDropin {
 	private static function recursive_copy( $src, $dst ) {
 		$dir = opendir( $src );
 		@mkdir( $dst );
-		while ( false !== ( $file = readdir( $dir ) ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition
+		while ( false !== ( $file = readdir( $dir ) ) ) { // phpcs:ignore
 			if ( ( '.' !== $file ) && ( '..' !== $file ) ) {
 				if ( is_dir( $src . '/' . $file ) ) {
 					self::recursive_copy( $src . '/' . $file, $dst . '/' . $file );
