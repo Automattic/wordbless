@@ -2,6 +2,8 @@
 
 namespace WorDBless;
 
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
 use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 abstract class BaseTestCase extends TestCase {
@@ -13,6 +15,7 @@ abstract class BaseTestCase extends TestCase {
 	 *
 	 * @before
 	 */
+	#[Before]
 	public function set_up_wordbless() {
 		if ( ! self::$hooks_saved ) {
 			$this->_backup_hooks();
@@ -24,6 +27,7 @@ abstract class BaseTestCase extends TestCase {
 	 *
 	 * @after
 	 */
+	#[After]
 	public function tear_down_wordbless() {
 		$this->_restore_hooks();
 		Options::init()->clear_options();
