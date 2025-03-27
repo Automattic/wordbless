@@ -42,7 +42,6 @@ class Sqlite {
 		$table = $wpdb->get_var( "SELECT name FROM sqlite_master WHERE type='table' AND name='{$wpdb->prefix}options'" );
 		if ( ! $table ) {
 			require_once ABSPATH . 'wp-admin/includes/schema.php';
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 			require_once ABSPATH . 'wp-includes/option.php';
 			require_once ABSPATH . 'wp-includes/capabilities.php';
 			require_once ABSPATH . 'wp-content/plugins/wp-sqlite-integration/wp-includes/sqlite/install-functions.php';
@@ -50,6 +49,7 @@ class Sqlite {
 		}
 
 		if ( ! get_option( 'blogname' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 			update_option( 'blogname', 'WorDBless SQLite' );
 			update_option( 'admin_email', 'admin@example.com' );
 			update_option( 'blog_public', 0 );

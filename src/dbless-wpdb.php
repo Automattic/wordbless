@@ -161,4 +161,20 @@ if ( defined( 'DB_ENGINE' ) && DB_ENGINE === 'dbless' ) {
 
 	// Require the implementation from the plugin, which sets up the $wpdb object.
 	require_once WP_CONTENT_DIR . '/plugins/wp-sqlite-integration/wp-includes/sqlite/db.php';
+			// Load SQLite integration plugin
+			require_once ABSPATH . 'wp-content/plugins/wp-sqlite-integration/constants.php';
+			require_once ABSPATH . 'wp-content/plugins/wp-sqlite-integration/wp-includes/sqlite/db.php';
+
+// Earliest hook.
+			add_action( 'muplugins_loaded', function() {
+			global $wpdb;
+			$table = $wpdb->get_var( "SELECT name FROM sqlite_master WHERE type='table' AND name='{$wpdb->prefix}options'" );
+			if ( ! $table ) {
+				require_once ABSPATH . 'wp-admin/includes/schema.php';
+				require_once ABSPATH . 'wp-includes/option.php';
+				require_once ABSPATH . 'wp-includes/capabilities.php';
+				require_once ABSPATH . 'wp-content/plugins/wp-sqlite-integration/wp-includes/sqlite/install-functions.php';
+				sqlite_make_db_sqlite();
+			}
+		}, 0);
 }
