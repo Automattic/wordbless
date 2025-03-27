@@ -161,9 +161,6 @@ if ( defined( 'DB_ENGINE' ) && DB_ENGINE === 'dbless' ) {
 
 	// Require the implementation from the plugin, which sets up the $wpdb object.
 	require_once WP_CONTENT_DIR . '/plugins/wp-sqlite-integration/wp-includes/sqlite/db.php';
-			// Load SQLite integration plugin
-			require_once ABSPATH . 'wp-content/plugins/wp-sqlite-integration/constants.php';
-			require_once ABSPATH . 'wp-content/plugins/wp-sqlite-integration/wp-includes/sqlite/db.php';
 
 	// Earliest hook.
 			add_action(
