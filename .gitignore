@@ -2,3 +2,5 @@
 /tools/
 /vendor/
 /wordpress/
+
+.phpunit.result.cache
