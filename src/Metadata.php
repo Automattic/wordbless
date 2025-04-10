@@ -79,7 +79,7 @@ class Metadata {
 			}
 		}
 		if ( empty( $check ) ) {
-			$check = get_metadata_default( $this->meta_type, $object_id, $meta_key, $single );
+			return get_metadata_default( $this->meta_type, $object_id, $meta_key, $single );
 		}
 		return $check;
 	}
