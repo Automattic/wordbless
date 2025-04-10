@@ -78,8 +78,8 @@ class Metadata {
 				}
 			}
 		}
-		if ( empty( $check ) && $single ) {
-			$check = array( '' ); // Ensure an empty string is returned when meta is not found.
+		if ( empty( $check ) ) {
+			return get_metadata_default( $this->meta_type, $object_id, $meta_key, $single );
 		}
 		return $check;
 	}
