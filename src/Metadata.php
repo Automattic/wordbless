@@ -78,8 +78,8 @@ class Metadata {
 				}
 			}
 		}
-		if ( empty( $check ) && $single ) {
-			$check = null;
+		if ( empty( $check ) ) {
+			$check = $single ? '' : array();
 		}
 		return $check;
 	}
