@@ -180,5 +180,22 @@ class Test_Users extends BaseTestCase {
 		$this->assertFalse( get_user_by( 'login', 'asdasd' ) );
 	}
 
+	public function test_get_non_existent_meta() {
+		$this->assertSame( '', get_user_meta( 123123, 'asdasd', true ) );
+		$this->assertSame( array(), get_user_meta( 123123, 'asdasd' ) );
+		$this->assertSame( false, metadata_exists('user', 1234, 'asdasd') );
+	}
 
+	public function test_get_existent_meta() {		
+		$id = wp_insert_user(
+			array(
+				'user_login' => 'zumbi',
+				'user_pass'  => '123',
+				'role'       => 'author',
+			)
+		);
+		$this->assertSame( false, metadata_exists('user', $id, 'test') );
+		add_user_meta( $id, 'test', 'value-1' );
+		$this->assertSame( true, metadata_exists('user', $id, 'test') );
+	}
 }
