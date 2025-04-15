@@ -290,11 +290,28 @@ class Test_Posts extends BaseTestCase {
 		$this->assertSame( false, metadata_exists('post', 1234, 'asdasd') );
 	}
 
-	public function test_get_existent_meta() {		
+	public function test_get_existent_meta() {
 		$id = wp_insert_post( array( 'post_title' => 'Post 1' ) );
 		$this->assertSame( false, metadata_exists('post', $id, 'test') );
 		add_post_meta( $id, 'test', 'value-1' );
 		$this->assertSame( true, metadata_exists('post', $id, 'test') );
+	}
+
+	public function test_get_non_existent_meta_with_default() {
+		$id = wp_insert_post( array( 'post_title' => 'Post 1' ) );
+		add_filter(
+			'default_post_metadata',
+			function ( $value, $object_id ) use ( $id ) {
+				if ( $object_id === $id ) {
+					return array( 'foo' => 42 );
+				}
+				return $value;
+			},
+			10,
+			2
+		);
+		$this->assertSame( array( array( 'foo' => 42 ) ), get_post_meta( $id, 'asdasd', false ) );
+		$this->assertSame( array( 'foo' => 42 ), get_post_meta( $id, 'asdasd', true ) );
 	}
 
 }
