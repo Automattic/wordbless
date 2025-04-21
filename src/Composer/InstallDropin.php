@@ -12,6 +12,9 @@ class InstallDropin {
 		if ( ! is_dir( 'wordpress/wp-content' ) ) {
 			mkdir( 'wordpress/wp-content', 0777, true );
 		}
+		if ( ! is_dir( 'wordpress/wp-content/themes' ) ) {
+			mkdir( 'wordpress/wp-content/themes', 0777, true );
+		}
 
 		// Copy the dbless-wpdb.php file
 		copy( dirname( __DIR__ ) . '/dbless-wpdb.php', 'wordpress/wp-content/db.php' );

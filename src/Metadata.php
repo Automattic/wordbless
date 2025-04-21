@@ -78,8 +78,12 @@ class Metadata {
 				}
 			}
 		}
-		if ( empty( $check ) && $single ) {
-			$check = array( '' ); // Ensure an empty string is returned when meta is not found.
+		if ( empty( $check ) ) {
+			$default = get_metadata_default( $this->meta_type, $object_id, $meta_key, $single );
+			// We're trying to reproduce the `get_metadata()` behavior of returning the result of `get_metadata_default()` when no object metadata is set.
+			// But Core's `get_metadata_raw()` that calls us will try to unwrap our return value if $single and it's array, so we need to wrap it.
+			// Note this breaks `metadata_exists()` if `$default` is an empty array though.
+			return $single && is_array( $default ) ? array( $default ) : $default;
 		}
 		return $check;
 	}
