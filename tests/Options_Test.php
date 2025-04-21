@@ -2,7 +2,7 @@
 
 namespace WorDBless;
 
-class Test_Options extends BaseTestCase {
+class Options_Test extends BaseTestCase {
 
 	public function test_add() {
 		add_option( 'test', 123 );

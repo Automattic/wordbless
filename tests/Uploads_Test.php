@@ -1,7 +1,7 @@
 <?php
 namespace WorDBless;
 
-class Test_Uploads extends BaseTestCase {
+class Uploads_Test extends BaseTestCase {
 	/**
 	 * @covers Load::load
 	 * @covers dbless_UPLOADS

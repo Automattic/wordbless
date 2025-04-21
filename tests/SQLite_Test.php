@@ -2,7 +2,7 @@
 
 namespace WorDBless;
 
-class Test_SQLite extends BaseTestCase {
+class SQLite_Test extends BaseTestCase {
 
 	/**
 	 * Test that the DB_ENGINE constant is set to 'sqlite'
@@ -107,5 +107,4 @@ class Test_SQLite extends BaseTestCase {
 		$this->assertEquals( 'Test Post', $data['title']['rendered'], 'REST API post title should match' );
 		$this->assertEquals( '<p>Test Content</p>' . "\n", $data['content']['rendered'], 'REST API post content should match' );
 	}
-
 }

@@ -5,7 +5,7 @@ namespace WorDBless;
 use PDO;
 use PDOException;
 use WP_User;
-use WorDBless\Sqlite;
+
 /**
  * Loads WorDBless
  */
@@ -16,7 +16,11 @@ class Load {
 	 *
 	 * @return void
 	 */
-	public static function load( $db_engine = 'dbless' ) {
+	public static function load( $db_engine = 'dbless', $persist = false ) {
+		if ( ! $persist ) {
+			// Clean up any existing SQLite database files.
+			Sqlite::cleanup();
+		}
 		if ( ! defined( 'ABSPATH' ) ) {
 			define( 'ABSPATH', __DIR__ . '/../../../../wordpress/' );
 		}

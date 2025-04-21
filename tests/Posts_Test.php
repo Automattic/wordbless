@@ -2,7 +2,7 @@
 
 namespace WorDBless;
 
-class Test_Posts extends BaseTestCase {
+class Posts_Test extends BaseTestCase {
 
 	public function test_add_post() {
 		$id = wp_insert_post( array( 'post_title' => 'This is a post' ) );

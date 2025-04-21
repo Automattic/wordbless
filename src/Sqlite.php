@@ -67,4 +67,31 @@ class Sqlite {
 			flush_rewrite_rules();
 		}
 	}
+
+	/**
+	 * Clean up SQLite database files
+	 *
+	 * @return void
+	 */
+	public static function cleanup() {
+		$db_dir = ABSPATH . 'wp-content/database';
+		if ( file_exists( $db_dir ) ) {
+			// Recursively delete all files and subdirectories
+			$files = new \RecursiveIteratorIterator(
+				new \RecursiveDirectoryIterator( $db_dir, \RecursiveDirectoryIterator::SKIP_DOTS ),
+				\RecursiveIteratorIterator::CHILD_FIRST
+			);
+
+			foreach ( $files as $file ) {
+				if ( $file->isDir() ) {
+					rmdir( $file->getRealPath() );
+				} else {
+					unlink( $file->getRealPath() );
+				}
+			}
+
+			// Finally remove the main directory
+			rmdir( $db_dir );
+		}
+	}
 }

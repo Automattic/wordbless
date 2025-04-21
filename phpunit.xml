@@ -2,15 +2,15 @@
 <phpunit backupGlobals="false" colors="true">
     <testsuites>
         <testsuite name="general">
-            <directory prefix="Test_" suffix=".php">tests</directory>
-            <exclude>tests/Test_Uploads.php</exclude>
-            <exclude>tests/Test_SQLite.php</exclude>
+            <directory suffix="Test.php">tests</directory>
+            <exclude>tests/Uploads_Test.php</exclude>
+            <exclude>tests/SQLite_Test.php</exclude>
         </testsuite>
         <testsuite name="uploads">
-            <file>tests/Test_Uploads.php</file>
+            <file>tests/Uploads_Test.php</file>
         </testsuite>
         <testsuite name="sqlite">
-            <file>tests/Test_SQLite.php</file>
+            <file>tests/SQLite_Test.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

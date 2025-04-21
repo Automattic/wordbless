@@ -2,7 +2,7 @@
 
 namespace WorDBless;
 
-abstract class Test_Setup_Teardown_Base extends BaseTestCase {
+abstract class Setup_Teardown_Base_Test extends BaseTestCase {
 
 	protected $setup_called = false;
 	protected $custom_setup_called = false;
