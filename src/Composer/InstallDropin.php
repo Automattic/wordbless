@@ -26,7 +26,7 @@ class InstallDropin {
 		}
 
 		// Copy the plugin files
-		$source_dir = dirname( dirname( __DIR__ ) ) . '/third-party/sqlite-database-integration';
+		$source_dir = dirname( __DIR__, 2 ) . '/third-party/sqlite-database-integration';
 		if ( is_dir( $source_dir ) ) {
 			self::recursive_copy( $source_dir, $sqlite_plugin_dir );
 		}
