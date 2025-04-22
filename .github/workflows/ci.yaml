@@ -90,7 +90,7 @@ jobs:
         run: |
           composer require --working-dir=tools "wp-coding-standards/wpcs:^2.3.0"
           tools/phpcs --config-set installed_paths tools/vendor/wp-coding-standards/wpcs
-          tools/phpcs -s --standard=WordPress-Core --exclude=WordPress.Files.FileName src/
+          tools/phpcs -s --standard=WordPress-Core --exclude=WordPress.Files.FileName --ignore=*/sqlite-database-integration/* src/
 
   static-code-analysis:
     name: "Static Code Analysis"

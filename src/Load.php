@@ -2,6 +2,10 @@
 
 namespace WorDBless;
 
+use PDO;
+use PDOException;
+use WP_User;
+
 /**
  * Loads WorDBless
  */
@@ -12,7 +16,11 @@ class Load {
 	 *
 	 * @return void
 	 */
-	public static function load() {
+	public static function load( $db_engine = 'dbless', $persist = false ) {
+		if ( ! $persist ) {
+			// Clean up any existing SQLite database files.
+			Sqlite::cleanup();
+		}
 		if ( ! defined( 'ABSPATH' ) ) {
 			define( 'ABSPATH', __DIR__ . '/../../../../wordpress/' );
 		}
@@ -23,6 +31,15 @@ class Load {
 			( defined( 'dbless_UPLOADS' ) )
 			? define( 'UPLOADS', 'wp-content/' . constant( '\dbless_UPLOADS' ) )
 			: define( 'UPLOADS', 'wp-content/uploads' );
+		}
+
+		if ( ! defined( 'DB_ENGINE' ) ) {
+			// normalize to one of the following: 'dbless', 'mysql', 'sqlite'
+			$db_engine = strtolower( $db_engine );
+			if ( ! in_array( $db_engine, array( 'dbless', 'mysql', 'sqlite' ), true ) ) {
+				$db_engine = 'dbless';
+			}
+			define( 'DB_ENGINE', $db_engine );
 		}
 		$_SERVER['SERVER_NAME'] = 'anything.example';
 		$_SERVER['HTTP_HOST']   = 'anything.example';
@@ -37,11 +54,15 @@ class Load {
 			mkdir( ABSPATH . UPLOADS ); // @phpstan-ignore constant.notFound
 		}
 
-		Options::init();
-		Posts::init();
-		PostMeta::init();
-		Users::init();
-		UserMeta::init();
-		WpDie::init();
+		if ( DB_ENGINE === 'dbless' ) {
+			Options::init();
+			Posts::init();
+			PostMeta::init();
+			Users::init();
+			UserMeta::init();
+			WpDie::init();
+		} elseif ( DB_ENGINE === 'sqlite' ) {
+			Sqlite::init();
+		}
 	}
 }

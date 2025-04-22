@@ -2,7 +2,7 @@
 
 namespace WorDBless;
 
-class Test_Attachments extends BaseTestCase {
+class Attachments_Test extends BaseTestCase {
 
 	public function create_upload_object( $file, $parent = 0 ) {
 		$contents = file_get_contents($file);

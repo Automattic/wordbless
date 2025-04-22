@@ -2,7 +2,7 @@
 
 namespace WorDBless;
 
-abstract class Test_Setup_Teardown_Base extends BaseTestCase {
+abstract class Setup_Teardown_Base_Test extends BaseTestCase {
 
 	protected $setup_called = false;
 	protected $custom_setup_called = false;
@@ -31,6 +31,32 @@ abstract class Test_Setup_Teardown_Base extends BaseTestCase {
 	 */
 	public function test_default_uploads_directory_is_recognized() {
 		$this->assertEquals( wp_upload_dir()['path'], ABSPATH . UPLOADS);
+	}
+
+	/**
+	 * This verifies that the default DB_ENGINE is set to 'dbless'.
+	 * @covers Load::load
+	 */
+	public function test_default_db_engine() {
+		$this->assertTrue( defined( 'DB_ENGINE' ), 'DB_ENGINE constant should be defined' );
+		$this->assertEquals( 'dbless', DB_ENGINE, 'DB_ENGINE should be set to "dbless" by default' );
+	}
+
+	/**
+	 * This verifies that the Db_Less_Wpdb class is loaded and available.
+	 * @covers Load::load
+	 */
+	public function test_db_less_wpdb_exists() {
+		$this->assertTrue( class_exists( 'Db_Less_Wpdb' ), 'Db_Less_Wpdb class should be loaded' );
+	}
+
+	/**
+	 * This verifies that the $wpdb global is an instance of Db_Less_Wpdb.
+	 * @covers Load::load
+	 */
+	public function test_wpdb_is_dbless_instance() {
+		global $wpdb;
+		$this->assertInstanceOf( 'Db_Less_Wpdb', $wpdb );
 	}
 
 	/**

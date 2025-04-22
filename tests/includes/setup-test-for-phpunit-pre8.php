@@ -2,7 +2,7 @@
 
 namespace WorDBless;
 
-class Test_Setup_Teardown extends Test_Setup_Teardown_Base {
+class Test_Setup_Teardown extends Setup_Teardown_Base_Test {
 
 	public function setUp() {
 		$this->setup_called = true;

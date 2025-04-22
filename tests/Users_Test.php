@@ -4,7 +4,7 @@ namespace WorDBless;
 
 use WP_User;
 
-class Test_Users extends BaseTestCase {
+class Users_Test extends BaseTestCase {
 
 	public function test_add() {
 		$id = wp_insert_user(
@@ -186,7 +186,7 @@ class Test_Users extends BaseTestCase {
 		$this->assertSame( false, metadata_exists('user', 1234, 'asdasd') );
 	}
 
-	public function test_get_existent_meta() {		
+	public function test_get_existent_meta() {
 		$id = wp_insert_user(
 			array(
 				'user_login' => 'zumbi',
