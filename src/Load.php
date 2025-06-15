@@ -17,10 +17,6 @@ class Load {
 	 * @return void
 	 */
 	public static function load( $db_engine = 'dbless', $persist = false ) {
-		if ( ! $persist ) {
-			// Clean up any existing SQLite database files.
-			Sqlite::cleanup();
-		}
 		if ( ! defined( 'ABSPATH' ) ) {
 			define( 'ABSPATH', __DIR__ . '/../../../../wordpress/' );
 		}
@@ -62,6 +58,11 @@ class Load {
 			UserMeta::init();
 			WpDie::init();
 		} elseif ( DB_ENGINE === 'sqlite' ) {
+			if ( ! $persist ) {
+				// Clean up any existing SQLite database files.
+				Sqlite::cleanup();
+			}
+
 			Sqlite::init();
 		}
 	}
