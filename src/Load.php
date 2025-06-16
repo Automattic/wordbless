@@ -17,12 +17,12 @@ class Load {
 	 * @return void
 	 */
 	public static function load( $db_engine = 'dbless', $persist = false ) {
+		if ( ! defined( 'ABSPATH' ) ) {
+			define( 'ABSPATH', __DIR__ . '/../../../../wordpress/' );
+		}
 		if ( ! $persist ) {
 			// Clean up any existing SQLite database files.
 			Sqlite::cleanup();
-		}
-		if ( ! defined( 'ABSPATH' ) ) {
-			define( 'ABSPATH', __DIR__ . '/../../../../wordpress/' );
 		}
 
 		define( 'WP_REPAIRING', true ); // Will not try to install WordPress
