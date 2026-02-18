@@ -182,7 +182,7 @@ Each data module (Options, Posts, Users, Metadata) follows the same pattern:
 `BaseTestCase` extends `Yoast\PHPUnitPolyfills\TestCases\TestCase` and provides:
 
 - `@before` / `#[Before]` → `set_up_wordbless()`: Backs up WordPress hook globals (`$wp_actions`, `$wp_current_filter`, `$wp_filter`) on first run.
-- `@after` / `#[After]` → `tear_down_wordbless()`: Restores hooks, clears Options, Posts, PostMeta, Users, and deletes upload files. Note: UserMeta is **not** cleared (see Pitfall #10).
+- `@after` / `#[After]` → `tear_down_wordbless()`: Restores hooks, clears Options, Posts, PostMeta, Users, UserMeta, and deletes upload files.
 
 ### Three Test Suites
 
@@ -213,5 +213,3 @@ The `phpunit.xml` maps suites to test files: `general` includes everything excep
 8. **`third-party/` is vendored code — don't modify it.** The `sqlite-database-integration/` directory is a copy of the WordPress SQLite integration plugin. Updates should come from upstream.
 
 9. **`InsertId::$id` starts at 10 and doesn't reset between tests.** The first issued ID is 11 (pre-increment). Don't write tests that depend on specific ID values. Use the returned ID from `wp_insert_post()`, `wp_insert_user()`, etc.
-
-10. **`UserMeta` is not cleared between tests.** `tear_down_wordbless()` clears Options, Posts, PostMeta, and Users, but does NOT clear UserMeta. User meta data persists across tests, which can cause test pollution. Clear it manually if your tests create user meta.
