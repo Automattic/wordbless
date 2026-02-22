@@ -37,7 +37,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           coverage: "none"
-          tools: "composer:2.2"
+          tools: "composer:v2"
 
       - name: "Validate composer.json and composer.lock"
         run: "composer validate --strict"
@@ -73,24 +73,26 @@ jobs:
 
       - name: "Install lowest dependencies from composer.json"
         if: "matrix.dependencies == 'lowest'"
-        run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
+        run: "composer update --no-interaction --no-progress --prefer-lowest"
 
       - name: "Install locked dependencies from composer.lock"
         if: "matrix.dependencies == 'locked'"
-        run: "composer install --no-interaction --no-progress --no-suggest"
+        run: "composer install --no-interaction --no-progress"
 
       - name: "Install highest dependencies from composer.json"
         if: "matrix.dependencies == 'highest'"
-        run: "composer update --no-interaction --no-progress --no-suggest"
+        run: "composer update --no-interaction --no-progress"
 
       - name: "Run ergebnis/composer-normalize"
         run: "tools/composer-normalize normalize --dry-run"
 
       - name: "Run wp-coding-standards/wpcs"
         run: |
-          composer require --working-dir=tools "wp-coding-standards/wpcs:^2.3.0"
-          tools/phpcs --config-set installed_paths tools/vendor/wp-coding-standards/wpcs
-          tools/phpcs -s --standard=WordPress-Core --exclude=WordPress.Files.FileName --ignore=*/sqlite-database-integration/* src/
+          test -f tools/composer.json || echo '{}' > tools/composer.json
+          composer config --working-dir=tools allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+          composer require --working-dir=tools "wp-coding-standards/wpcs:^3.1.0" "phpcsstandards/phpcsutils:^1.0" "phpcsstandards/phpcsextra:^1.0"
+          tools/vendor/bin/phpcs --config-set installed_paths tools/vendor/wp-coding-standards/wpcs,tools/vendor/phpcsstandards/phpcsutils,tools/vendor/phpcsstandards/phpcsextra
+          tools/vendor/bin/phpcs -s --standard=WordPress-Core --exclude=WordPress.Files.FileName --ignore=*/sqlite-database-integration/* src/
 
   static-code-analysis:
     name: "Static Code Analysis"
@@ -115,7 +117,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           coverage: "none"
-          tools: "composer:2.2"
+          tools: "composer:v2"
 
       - name: "Determine composer cache directory"
         shell: "bash"
@@ -148,15 +150,15 @@ jobs:
 
       - name: "Install lowest dependencies from composer.json"
         if: "matrix.dependencies == 'lowest'"
-        run: "composer update --no-interaction --no-progress --no-suggest --prefer-lowest"
+        run: "composer update --no-interaction --no-progress --prefer-lowest"
 
       - name: "Install locked dependencies from composer.lock"
         if: "matrix.dependencies == 'locked'"
-        run: "composer install --no-interaction --no-progress --no-suggest"
+        run: "composer install --no-interaction --no-progress"
 
       - name: "Install highest dependencies from composer.json"
         if: "matrix.dependencies == 'highest'"
-        run: "composer update --no-interaction --no-progress --no-suggest"
+        run: "composer update --no-interaction --no-progress"
 
       - name: "Create cache directory for phpstan/phpstan"
         run: "mkdir -p .build/phpstan"
@@ -181,6 +183,10 @@ jobs:
     strategy:
       matrix:
         php-version:
+          - "8.4"
+          - "8.3"
+          - "8.2"
+          - "8.1"
           - "8.0"
           - "7.4"
           - "7.3"
@@ -192,12 +198,14 @@ jobs:
           - "highest"
 
         exclude:
-          # Locked dependencies require PHP 7.3+.
+          # Locked/highest dependencies require PHP 7.3+.
           - php-version: "7.2"
             dependencies: "locked"
-          # Highest dependencies require PHP 7.3+
           - php-version: "7.2"
             dependencies: "highest"
+          # Lowest PHPUnit 9.5.x predates PHP 8.4 and is incompatible.
+          - php-version: "8.4"
+            dependencies: "lowest"
 
     steps:
       - name: "Checkout"
@@ -209,7 +217,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           coverage: "none"
-          tools: "composer:2.2"
+          tools: "composer:v2"
 
       - name: "Determine composer cache directory"
         shell: "bash"
@@ -222,19 +230,73 @@ jobs:
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
           restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
 
+      - name: "Remove platform PHP override"
+        run: "composer config --unset platform.php"
+
+      - name: "Pin PHPUnit 7.5 for PHP 7.2 and ignore its security advisory"
+        if: "matrix.php-version == '7.2'"
+        run: |
+          composer config audit.ignore '["PKSA-z3gr-8qht-p93v"]' --json
+          composer require --no-update --no-interaction --dev 'phpunit/phpunit:^7.5'
+
       - name: "Install lowest dependencies from composer.json"
         if: "matrix.dependencies == 'lowest'"
-        run: |
-          composer require --no-update --no-interaction --no-progress --no-suggest --dev 'phpunit/phpunit:^7.5 || ^9.5'
-          composer update --no-interaction --no-progress --no-suggest --prefer-lowest --dev
+        run: "composer update --no-interaction --no-progress --prefer-lowest"
 
       - name: "Install locked dependencies from composer.lock"
         if: "matrix.dependencies == 'locked'"
-        run: "composer install --no-interaction --no-progress --no-suggest"
+        run: "composer install --no-interaction --no-progress"
 
       - name: "Install highest dependencies from composer.json"
         if: "matrix.dependencies == 'highest'"
-        run: "composer update --no-interaction --no-progress --no-suggest"
+        run: "composer update --no-interaction --no-progress"
+
+      - name: "Run integration tests with phpunit/phpunit"
+        run: |
+          cp -f src/dbless-wpdb.php wordpress/wp-content/db.php
+          composer run-script phpunit
+
+  wp-trunk-tests:
+    name: "Tests (WP trunk)"
+
+    runs-on: "ubuntu-24.04"
+    continue-on-error: true
+
+    strategy:
+      matrix:
+        php-version:
+          - "8.4"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+
+      - name: "Install PHP with extensions"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          extensions: "${{ env.PHP_EXTENSIONS }}"
+          coverage: "none"
+          tools: "composer:v2"
+
+      - name: "Determine composer cache directory"
+        shell: "bash"
+        run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
+
+      - name: "Cache dependencies installed with composer"
+        uses: "actions/cache@v4"
+        with:
+          path: "${{ env.COMPOSER_CACHE_DIR }}"
+          key: "php-${{ matrix.php-version }}-composer-wp-trunk-${{ github.sha }}"
+          restore-keys: "php-${{ matrix.php-version }}-composer-wp-trunk-"
+
+      - name: "Install dependencies with WP trunk"
+        run: |
+          composer config --unset platform.php
+          composer config minimum-stability dev
+          composer config prefer-stable true
+          composer require --no-update "roots/wordpress:dev-main"
+          composer update --no-interaction --no-progress
 
       - name: "Run integration tests with phpunit/phpunit"
         run: |
