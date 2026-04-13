@@ -7,20 +7,25 @@
 
 namespace WorDBless\Composer;
 
+use Composer\Script\Event;
+
 class InstallDropin {
-	public static function copy() {
-		if ( ! is_dir( 'wordpress/wp-content' ) ) {
-			mkdir( 'wordpress/wp-content', 0777, true );
+	public static function copy( Event $event ) {
+		$extra = $event->getComposer()->getPackage()->getExtra();
+		$wpDir = $extra['wordpress-install-dir'] ?? 'wordpress';
+
+		if ( ! is_dir( $wpDir . '/wp-content' ) ) {
+			mkdir( $wpDir . '/wp-content', 0777, true );
 		}
-		if ( ! is_dir( 'wordpress/wp-content/themes' ) ) {
-			mkdir( 'wordpress/wp-content/themes', 0777, true );
+		if ( ! is_dir( $wpDir . '/wp-content/themes' ) ) {
+			mkdir( $wpDir . '/wp-content/themes', 0777, true );
 		}
 
 		// Copy the dbless-wpdb.php file
-		copy( dirname( __DIR__ ) . '/dbless-wpdb.php', 'wordpress/wp-content/db.php' );
+		copy( dirname( __DIR__ ) . '/dbless-wpdb.php', $wpDir . '/wp-content/db.php' );
 
 		// Copy the SQLite database integration plugin
-		$sqlite_plugin_dir = 'wordpress/wp-content/plugins/wp-sqlite-integration';
+		$sqlite_plugin_dir = $wpDir . '/wp-content/plugins/wp-sqlite-integration';
 		if ( ! is_dir( $sqlite_plugin_dir ) ) {
 			mkdir( $sqlite_plugin_dir, 0777, true );
 		}
