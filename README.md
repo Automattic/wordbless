@@ -35,6 +35,29 @@ require_once __DIR__ . '/../vendor/autoload.php'; // adjust the path as needed
 \WorDBless\Load::load();
 ```
 
+#### Optionally specify an install path
+
+The WordPress Core installer package allows customizing the path that is going to be used to install WordPress into. You can specify it in your `composer.json` file:
+
+``` json
+	"extra": {
+		"wordpress-install-dir": "vendor/wordpress"
+	}
+```
+
+Keep in mind that you will have to define the `ABSPATH` constant in your project before calling the `Load::load()` method.
+
+``` php
+require_once __DIR__ . '/vendor/autoload.php'; // adjust the path as needed
+
+// Define ABSPATH before WorDBless loads.
+if ( ! \defined( 'ABSPATH' ) ) {
+    \define( 'ABSPATH', __DIR__ . '/vendor/wordpress/' );
+}
+
+\WorDBless\Load::load();
+```
+
 That's it! You can now use WordPress core functions in your tests!
 
 ### Writing tests
