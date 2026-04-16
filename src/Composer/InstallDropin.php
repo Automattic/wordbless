@@ -7,20 +7,32 @@
 
 namespace WorDBless\Composer;
 
+use Composer\Script\Event;
+
 class InstallDropin {
-	public static function copy() {
-		if ( ! is_dir( 'wordpress/wp-content' ) ) {
-			mkdir( 'wordpress/wp-content', 0777, true );
+
+	/**
+	 * Copy the db.php drop-in and SQLite plugin into the WordPress directory.
+	 *
+	 * @param Event $event Composer script event.
+	 * @return void
+	 */
+	public static function copy( Event $event ) {
+		$extra  = $event->getComposer()->getPackage()->getExtra();
+		$wp_dir = ! empty( $extra['wordpress-install-dir'] ) ? $extra['wordpress-install-dir'] : 'wordpress'; // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText -- Composer config key and filesystem path, not a brand reference.
+
+		if ( ! is_dir( $wp_dir . '/wp-content' ) ) {
+			mkdir( $wp_dir . '/wp-content', 0777, true );
 		}
-		if ( ! is_dir( 'wordpress/wp-content/themes' ) ) {
-			mkdir( 'wordpress/wp-content/themes', 0777, true );
+		if ( ! is_dir( $wp_dir . '/wp-content/themes' ) ) {
+			mkdir( $wp_dir . '/wp-content/themes', 0777, true );
 		}
 
 		// Copy the dbless-wpdb.php file
-		copy( dirname( __DIR__ ) . '/dbless-wpdb.php', 'wordpress/wp-content/db.php' );
+		copy( dirname( __DIR__ ) . '/dbless-wpdb.php', $wp_dir . '/wp-content/db.php' );
 
 		// Copy the SQLite database integration plugin
-		$sqlite_plugin_dir = 'wordpress/wp-content/plugins/wp-sqlite-integration';
+		$sqlite_plugin_dir = $wp_dir . '/wp-content/plugins/wp-sqlite-integration';
 		if ( ! is_dir( $sqlite_plugin_dir ) ) {
 			mkdir( $sqlite_plugin_dir, 0777, true );
 		}

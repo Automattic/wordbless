@@ -13,6 +13,7 @@
 		"roots/wordpress": "^6.6 || ^7.0"
 	},
 	"require-dev": {
+		"composer/composer": "^2.9",
 		"phpunit/phpunit": "^7.5 || ^9.5",
 		"yoast/phpunit-polyfills": "^1.0"
 	},
