@@ -45,14 +45,14 @@ The WordPress Core installer package allows customizing the path that is going t
 	}
 ```
 
-Keep in mind that you will have to define the `ABSPATH` constant in your project before calling the `Load::load()` method.
+Keep in mind that you will have to define the `ABSPATH` constant in your project before calling the `Load::load()` method. The value must point to the same directory as `wordpress-install-dir` and must end with a trailing slash.
 
 ``` php
 require_once __DIR__ . '/vendor/autoload.php'; // adjust the path as needed
 
-// Define ABSPATH before WorDBless loads.
+// Point ABSPATH to the custom WordPress install directory before WorDBless loads.
 if ( ! \defined( 'ABSPATH' ) ) {
-    \define( 'ABSPATH', __DIR__ . '/vendor/wordpress/' );
+	\define( 'ABSPATH', __DIR__ . '/vendor/wordpress/' );
 }
 
 \WorDBless\Load::load();

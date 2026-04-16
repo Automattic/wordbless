@@ -10,9 +10,16 @@ namespace WorDBless\Composer;
 use Composer\Script\Event;
 
 class InstallDropin {
+
+	/**
+	 * Copy the db.php drop-in and SQLite plugin into the WordPress directory.
+	 *
+	 * @param Event $event Composer script event.
+	 * @return void
+	 */
 	public static function copy( Event $event ) {
 		$extra  = $event->getComposer()->getPackage()->getExtra();
-		$wp_dir = $extra['wordpress-install-dir'] ?? 'wordpress'; // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText -- keeping filesystem paths lowercase.
+		$wp_dir = ! empty( $extra['wordpress-install-dir'] ) ? $extra['wordpress-install-dir'] : 'wordpress'; // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText -- Composer config key and filesystem path, not a brand reference.
 
 		if ( ! is_dir( $wp_dir . '/wp-content' ) ) {
 			mkdir( $wp_dir . '/wp-content', 0777, true );
