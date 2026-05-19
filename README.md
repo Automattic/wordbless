@@ -138,7 +138,7 @@ Here is a non-exaustive list of functions supported:
 * `add_user_meta`
 * `delete_user_meta`
 
-Posts can be assigned to users and proper capabilities will be correctly checked. When deleting a user, reassigning posts to other user will also work.
+Posts can be assigned to users and proper capabilities will be correctly checked. When deleting a user, reassigning posts to other users will also work.
 
 Note: Fetching users using `WP_Users_Query` will not work! To fetch a user, use `get_userdata()`, `get_user_by` or `WP_User` class.
 
