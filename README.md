@@ -148,7 +148,7 @@ By default, only `siteurl` and `home` options are populated with `http://example
 
 If you want, you can add more options to be loaded by default. 
 
-Just declare a `dbless_default_options()` function in your bootstrap and make it return an array where the keys are option names and values, options values.
+Just declare a `dbless_default_options()` function in your bootstrap and make it return an array where the keys are option names and the values are option values.
 
 ## Examples
 
