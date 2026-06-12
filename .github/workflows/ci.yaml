@@ -29,7 +29,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: "actions/checkout@v6"
 
       - name: "Install PHP with extensions"
         uses: "shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240" # 2.37.2
@@ -47,7 +47,7 @@ jobs:
         run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache PHAR files installed with phive"
-        uses: "actions/cache@v4"
+        uses: "actions/cache@v5"
         with:
           path: "${{ runner.temp }}/.phive"
           key: "php-${{ matrix.php-version }}-phive-${{ matrix.dependencies }}-${{ hashFiles('.phive/phars.xml') }}"
@@ -65,7 +65,7 @@ jobs:
           trustGpgKeys: "C00543248C87FB13,31C7E470E2138192,A978220305CD5C32"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v4"
+        uses: "actions/cache@v5"
         with:
           path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -109,7 +109,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: "actions/checkout@v6"
 
       - name: "Install PHP with extensions"
         uses: "shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240" # 2.37.2
@@ -124,7 +124,7 @@ jobs:
         run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache PHAR files installed with phive"
-        uses: "actions/cache@v4"
+        uses: "actions/cache@v5"
         with:
           path: "${{ runner.temp }}/.phive"
           key: "php-${{ matrix.php-version }}-phive-${{ matrix.dependencies }}-${{ hashFiles('.phive/phars.xml') }}"
@@ -142,7 +142,7 @@ jobs:
           trustGpgKeys: "C00543248C87FB13,31C7E470E2138192,A978220305CD5C32"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v4"
+        uses: "actions/cache@v5"
         with:
           path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -164,7 +164,7 @@ jobs:
         run: "mkdir -p .build/phpstan"
 
       - name: "Cache cache directory for phpstan/phpstan"
-        uses: "actions/cache@v4"
+        uses: "actions/cache@v5"
         with:
           path: ".build/phpstan"
           key: "php-${{ matrix.php-version }}-phpstan-${{ github.sha }}"
@@ -209,7 +209,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: "actions/checkout@v6"
 
       - name: "Install PHP with extensions"
         uses: "shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240" # 2.37.2
@@ -224,7 +224,7 @@ jobs:
         run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v4"
+        uses: "actions/cache@v5"
         with:
           path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}"
@@ -269,7 +269,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: "actions/checkout@v6"
 
       - name: "Install PHP with extensions"
         uses: "shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240" # 2.37.2
@@ -284,7 +284,7 @@ jobs:
         run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v4"
+        uses: "actions/cache@v5"
         with:
           path: "${{ env.COMPOSER_CACHE_DIR }}"
           key: "php-${{ matrix.php-version }}-composer-wp-trunk-${{ github.sha }}"
