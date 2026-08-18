@@ -83,7 +83,16 @@ jobs:
         if: "matrix.dependencies == 'highest'"
         run: "composer update --no-interaction --no-progress"
 
+      # setup-php writes GITHUB_TOKEN into the global auth.json as github-oauth.
+      # The Composer bundled in composer-normalize 2.45.0 still validates that
+      # token against {^[.A-Za-z0-9_]+$}, which rejects the hyphen GITHUB_TOKEN
+      # sometimes contains, so this job failed at random. Current Composer
+      # dropped the check, which is why no other step in this job is affected.
+      # Point this one step at an empty COMPOSER_HOME so it never reads the
+      # token; it only ever touches the local composer.json and composer.lock.
       - name: "Run ergebnis/composer-normalize"
+        env:
+          COMPOSER_HOME: "${{ runner.temp }}/composer-normalize-home"
         run: "tools/composer-normalize normalize --dry-run"
 
       - name: "Run wp-coding-standards/wpcs"
@@ -250,6 +259,73 @@ jobs:
       - name: "Install highest dependencies from composer.json"
         if: "matrix.dependencies == 'highest'"
         run: "composer update --no-interaction --no-progress"
+
+      - name: "Run integration tests with phpunit/phpunit"
+        run: |
+          cp -f src/dbless-wpdb.php wordpress/wp-content/db.php
+          composer run-script phpunit
+
+  wordpress-version-tests:
+    name: "Tests (WP ${{ matrix.wordpress-version }})"
+
+    runs-on: "ubuntu-24.04"
+
+    strategy:
+      matrix:
+        php-version:
+          - "8.4"
+
+        # The "highest" strategy above always follows the newest release the
+        # constraint allows, so it stops covering a major as soon as the next
+        # one ships. Pin the majors that must keep working here.
+        wordpress-version:
+          - "6.6.*"
+          - "7.0.*"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v6"
+
+      - name: "Install PHP with extensions"
+        uses: "shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240" # 2.37.2
+        with:
+          php-version: "${{ matrix.php-version }}"
+          extensions: "${{ env.PHP_EXTENSIONS }}"
+          coverage: "none"
+          tools: "composer:v2"
+
+      - name: "Determine composer cache directory"
+        shell: "bash"
+        run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
+
+      - name: "Cache dependencies installed with composer"
+        uses: "actions/cache@v5"
+        with:
+          path: "${{ env.COMPOSER_CACHE_DIR }}"
+          key: "php-${{ matrix.php-version }}-composer-wp-${{ matrix.wordpress-version }}-${{ hashFiles('composer.json') }}"
+          restore-keys: "php-${{ matrix.php-version }}-composer-wp-${{ matrix.wordpress-version }}-"
+
+      - name: "Install dependencies with WordPress ${{ matrix.wordpress-version }}"
+        env:
+          WORDPRESS_VERSION: "${{ matrix.wordpress-version }}"
+        run: |
+          composer config --unset platform.php
+          composer require --no-update --no-interaction "roots/wordpress:${WORDPRESS_VERSION}"
+          composer update --no-interaction --no-progress
+
+      - name: "Verify the expected WordPress version is installed"
+        env:
+          WORDPRESS_VERSION: "${{ matrix.wordpress-version }}"
+        run: |
+          php -r '
+            require "wordpress/wp-includes/version.php";
+            $expected = rtrim(getenv("WORDPRESS_VERSION"), ".*");
+            if (strpos($wp_version, $expected) !== 0) {
+              fwrite(STDERR, "Expected WordPress {$expected}.x, got {$wp_version}\n");
+              exit(1);
+            }
+            echo "WordPress {$wp_version}\n";
+          '
 
       - name: "Run integration tests with phpunit/phpunit"
         run: |
