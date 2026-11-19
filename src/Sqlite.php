@@ -38,7 +38,7 @@ class Sqlite {
 		// wp-settings.php will access the database if `WP_CONTENT_URL` is not defined.
 		// Define it if there's no existing database file to avoid "table not found" errors.
 		if ( ! defined( 'WP_CONTENT_URL' ) && ! file_exists( FQDB ) ) {
-			define( 'WP_CONTENT_URL', 'http://anything.example/wp-content' );
+			define( 'WP_CONTENT_URL', defined( 'WP_SITEURL' ) ? WP_SITEURL . '/wp-content' : 'http://anything.example/wp-content' );
 		}
 	}
 
