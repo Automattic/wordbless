@@ -41,15 +41,15 @@ class Load {
 			}
 			define( 'DB_ENGINE', $db_engine );
 		}
-		// The SQLite driver bails without a database name.
-		if ( ! defined( 'DB_NAME' ) ) {
-			define( 'DB_NAME', 'wordbless' );
-		}
 		$_SERVER['SERVER_NAME'] = 'anything.example';
 		$_SERVER['HTTP_HOST']   = 'anything.example';
 
 		global $table_prefix;
 		$table_prefix = 'wp_';
+
+		if ( DB_ENGINE === 'sqlite' ) {
+			Sqlite::preinit();
+		}
 
 		require ABSPATH . '/wp-settings.php';
 		require_once ABSPATH . 'wp-admin/includes/admin.php';

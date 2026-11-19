@@ -10,13 +10,11 @@ use WP_User;
 class Sqlite {
 
 	/**
-	 * Initialize SQLite database and install tables if needed
+	 * Pre-initialize the SQLite database, before WordPress is loaded.
 	 *
 	 * @return void
 	 */
-	public static function init() {
-		global $wpdb;
-
+	public static function preinit() {
 		// Check if tables exist
 		$db_dir = ABSPATH . 'wp-content/database';
 		if ( ! file_exists( $db_dir ) ) {
@@ -33,6 +31,24 @@ class Sqlite {
 		if ( ! defined( 'FQDB' ) ) {
 			define( 'FQDB', FQDBDIR . '.ht.sqlite' );
 		}
+		if ( ! defined( 'DB_NAME' ) ) {
+			define( 'DB_NAME', 'wordpress' );
+		}
+
+		// wp-settings.php will access the database if `WP_CONTENT_URL` is not defined.
+		// Define it if there's no existing database file to avoid "table not found" errors.
+		if ( ! defined( 'WP_CONTENT_URL' ) && ! file_exists( FQDB ) ) {
+			define( 'WP_CONTENT_URL', 'http://anything.example/wp-content' );
+		}
+	}
+
+	/**
+	 * Initialize SQLite database and install tables if needed
+	 *
+	 * @return void
+	 */
+	public static function init() {
+		global $wpdb;
 
 		// Load SQLite integration plugin
 		require_once ABSPATH . 'wp-content/plugins/wp-sqlite-integration/constants.php';
