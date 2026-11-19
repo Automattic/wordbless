@@ -1,41 +1,34 @@
 <?php
 /**
  * Custom functions for the SQLite implementation.
- *
- * @package wp-sqlite-integration
- * @since 1.0.0
  */
 
 /**
- * This class defines user defined functions(UDFs) for PDO library.
+ * Registers MySQL-compatible functions with PDO SQLite.
  *
- * These functions replace those used in the SQL statement with the PHP functions.
+ * Each callback implements a MySQL SQL function that SQLite does not provide.
  *
- * Usage:
- *
- * <code>
- * new WP_SQLite_PDO_User_Defined_Functions(ref_to_pdo_obj);
- * </code>
- *
- * This automatically enables ref_to_pdo_obj to replace the function in the SQL statement
- * to the ones defined here.
+ * @access private
  */
 class WP_SQLite_PDO_User_Defined_Functions {
 
 	/**
-	 * The class constructor
+	 * Register the user-defined SQLite functions on a PDO connection.
 	 *
-	 * Initializes the use defined functions to PDO object with PDO::sqliteCreateFunction().
+	 * The functions are registered using PDO::sqliteCreateFunction().
 	 *
-	 * @param PDO $pdo The PDO object.
+	 * @param PDO|Pdo\Sqlite $pdo The PDO object.
 	 */
-	public function __construct( $pdo ) {
-		if ( ! $pdo ) {
-			wp_die( 'Database is not initialized.', 'Database Error' );
+	public static function register_for( $pdo ): self {
+		$instance = new self();
+		foreach ( $instance->functions as $f => $t ) {
+			if ( $pdo instanceof Pdo\Sqlite ) {
+				$pdo->createFunction( $f, array( $instance, $t ) );
+			} else {
+				$pdo->sqliteCreateFunction( $f, array( $instance, $t ) );
+			}
 		}
-		foreach ( $this->functions as $f => $t ) {
-			$pdo->sqliteCreateFunction( $f, array( $this, $t ) );
-		}
+		return $instance;
 	}
 
 	/**
@@ -46,46 +39,97 @@ class WP_SQLite_PDO_User_Defined_Functions {
 	 * @var array
 	 */
 	private $functions = array(
-		'month'          => 'month',
-		'monthnum'       => 'month',
-		'year'           => 'year',
-		'day'            => 'day',
-		'hour'           => 'hour',
-		'minute'         => 'minute',
-		'second'         => 'second',
-		'week'           => 'week',
-		'weekday'        => 'weekday',
-		'dayofweek'      => 'dayofweek',
-		'dayofmonth'     => 'dayofmonth',
-		'unix_timestamp' => 'unix_timestamp',
-		'now'            => 'now',
-		'md5'            => 'md5',
-		'curdate'        => 'curdate',
-		'rand'           => 'rand',
-		'from_unixtime'  => 'from_unixtime',
-		'localtime'      => 'now',
-		'localtimestamp' => 'now',
-		'isnull'         => 'isnull',
-		'if'             => '_if',
-		'regexp'         => 'regexp',
-		'field'          => 'field',
-		'log'            => 'log',
-		'least'          => 'least',
-		'greatest'       => 'greatest',
-		'get_lock'       => 'get_lock',
-		'release_lock'   => 'release_lock',
-		'ucase'          => 'ucase',
-		'lcase'          => 'lcase',
-		'unhex'          => 'unhex',
-		'inet_ntoa'      => 'inet_ntoa',
-		'inet_aton'      => 'inet_aton',
-		'datediff'       => 'datediff',
-		'locate'         => 'locate',
-		'utc_date'       => 'utc_date',
-		'utc_time'       => 'utc_time',
-		'utc_timestamp'  => 'utc_timestamp',
-		'version'        => 'version',
+		'throw'                        => 'throw',
+		'month'                        => 'month',
+		'monthnum'                     => 'month',
+		'year'                         => 'year',
+		'day'                          => 'day',
+		'hour'                         => 'hour',
+		'minute'                       => 'minute',
+		'second'                       => 'second',
+		'week'                         => 'week',
+		'weekday'                      => 'weekday',
+		'dayofweek'                    => 'dayofweek',
+		'dayofmonth'                   => 'dayofmonth',
+		'unix_timestamp'               => 'unix_timestamp',
+		'now'                          => 'now',
+		'md5'                          => 'md5',
+		'curdate'                      => 'curdate',
+		'rand'                         => 'rand',
+		'from_unixtime'                => 'from_unixtime',
+		'localtime'                    => 'now',
+		'localtimestamp'               => 'now',
+		'isnull'                       => 'isnull',
+		'regexp'                       => 'regexp',
+		'field'                        => 'field',
+		'log'                          => 'log',
+		'least'                        => 'least',
+		'greatest'                     => 'greatest',
+		'get_lock'                     => 'get_lock',
+		'release_lock'                 => 'release_lock',
+		'ucase'                        => 'ucase',
+		'lcase'                        => 'lcase',
+		'unhex'                        => 'unhex',
+		'from_base64'                  => 'from_base64',
+		'to_base64'                    => 'to_base64',
+		'inet_ntoa'                    => 'inet_ntoa',
+		'inet_aton'                    => 'inet_aton',
+		'datediff'                     => 'datediff',
+		'locate'                       => 'locate',
+		'utc_date'                     => 'utc_date',
+		'utc_time'                     => 'utc_time',
+		'utc_timestamp'                => 'utc_timestamp',
+		'version'                      => 'version',
+		'reverse'                      => 'reverse',
+
+		// Internal helper functions.
+		'_helper_like_to_glob_pattern' => '_helper_like_to_glob_pattern',
 	);
+
+	/**
+	 * First element of the RAND(N) LCG state (the value the output is derived from).
+	 *
+	 * @var int|null
+	 */
+	private $rand_seed1 = null;
+
+	/**
+	 * Second element of the RAND(N) LCG state (the paired value used in the recurrence).
+	 *
+	 * @var int|null
+	 */
+	private $rand_seed2 = null;
+
+	/**
+	 * Last seed value passed to RAND(N) in the current statement.
+	 *
+	 * Used to detect whether the rand sequence is advancing with the same seed
+	 * (e.g. "SELECT RAND(3) FROM t"), or reseeding (starting a new sequence).
+	 *
+	 * @var int|null
+	 */
+	private $rand_last_seed = null;
+
+	/**
+	 * Clear any per-statement state held by the UDFs.
+	 */
+	public function flush(): void {
+		$this->rand_seed1     = null;
+		$this->rand_seed2     = null;
+		$this->rand_last_seed = null;
+	}
+
+	/**
+	 * A helper function to throw an error from SQLite expressions.
+	 *
+	 * @param string $message The error message.
+	 *
+	 * @throws Exception The error message.
+	 * @return void
+	 */
+	public function throw( $message ): void {
+		throw new Exception( $message );
+	}
 
 	/**
 	 * Method to return the unix timestamp.
@@ -147,19 +191,74 @@ class WP_SQLite_PDO_User_Defined_Functions {
 	}
 
 	/**
-	 * Method to emulate MySQL RAND() function.
+	 * Method to emulate MySQL's seeded RAND(N) function.
 	 *
-	 * SQLite does have a random generator, but it is called RANDOM() and returns random
-	 * number between -9223372036854775808 and +9223372036854775807. So we substitute it
-	 * with PHP random generator.
+	 * Implements MySQL's deterministic LCG (Linear Congruential Generator),
+	 * producing bit-exact output for a given seed.
 	 *
-	 * This function uses mt_rand() which is four times faster than rand() and returns
-	 * the random number between 0 and 1.
+	 * Known divergences from MySQL:
 	 *
-	 * @return int
+	 *  1. In MySQL, RAND(N) behaves differently depending on whether the seed
+	 *     is constant expression or varies per invocation:
+	 *      - Constant seed (e.g. "SELECT RAND(3) FROM t"):
+	 *        LCG is initialized once per statement and advanced for each row.
+	 *      - Non-constant seed (e.g. "SELECT RAND(col) FROM t"):
+	 *        LCG is initialized for every row with its seed value.
+	 *
+	 *     A SQLite UDF cannot tell whether the seed expression is constant, so
+	 *     we just compare the seed against its last value. This diverges from
+	 *     MySQL in rare cases, and we can consider improving it in the future.
+	 *
+	 *  2. The LCG state is shared across call sites in the same query, so
+	 *     "SELECT RAND(1), RAND(1)" yields different results here than in MySQL.
+	 *     This is a rare edge case that we can consider improving in the future.
+	 *
+	 * Unseeded RAND() never reaches this function. The AST driver translates it
+	 * directly to a more efficient SQLite-native expression.
+	 *
+	 * @param int|float|string|null $seed Seed value.
+	 *
+	 * @return float A value in [0, 1).
 	 */
-	public function rand() {
-		return mt_rand( 0, 1 );
+	public function rand( $seed ) {
+		// Requires 64-bit PHP. Seed * 0x10000001 can exceed PHP_INT_MAX on 32-bit.
+		$max_value = 0x3FFFFFFF;
+
+		if ( null === $seed ) {
+			// MySQL treats NULL seed as 0.
+			$seed = 0;
+		} elseif ( ! is_int( $seed ) ) {
+			/*
+			 * MySQL rounds float values and numeric strings take the same path.
+			 * Reduce the value to a 32-bit range using "fmod" to avoid firing
+			 * the "out-of-range float to int" cast deprecation on PHP 8.1+.
+			 */
+			$seed = (int) fmod( round( (float) $seed, 0, PHP_ROUND_HALF_EVEN ), 0x100000000 );
+		}
+
+		// Initialize MySQL's internal 30-bit seeds.
+		if ( $seed !== $this->rand_last_seed ) {
+			/*
+			 * MySQL casts to uint32, and the intermediate results wrap at 32-bit
+			 * unsigned boundaries. We emulate this with & 0xFFFFFFFF masks.
+			 */
+			$seed_u32             = $seed & 0xFFFFFFFF;
+			$this->rand_seed1     = ( ( $seed_u32 * 0x10001 + 55555555 ) & 0xFFFFFFFF ) % $max_value;
+			$this->rand_seed2     = ( ( $seed_u32 * 0x10000001 ) & 0xFFFFFFFF ) % $max_value;
+			$this->rand_last_seed = $seed;
+		}
+
+		/*
+		 * MySQL's LCG recurrence:
+		 *   seed1 = (seed1 * 3 + seed2) % max_value
+		 *   seed2 = (seed1 + seed2 + 33) % max_value
+		 *
+		 * Note that seed1 is updated first and the new value is used for seed2.
+		 */
+		$this->rand_seed1 = ( $this->rand_seed1 * 3 + $this->rand_seed2 ) % $max_value;
+		$this->rand_seed2 = ( $this->rand_seed1 + $this->rand_seed2 + 33 ) % $max_value;
+
+		return (float) $this->rand_seed1 / (float) $max_value;
 	}
 
 	/**
@@ -219,6 +318,14 @@ class WP_SQLite_PDO_User_Defined_Functions {
 	 */
 	public function month( $field ) {
 		/*
+		 * MySQL returns 0 for MONTH('0000-00-00') and for dates with
+		 * zero month parts like '2020-00-15'. PHP's strtotime() can't
+		 * parse these, so we extract the month directly from the string.
+		 */
+		if ( preg_match( '/^\d{4}-(\d{2})/', $field, $matches ) ) {
+			return intval( $matches[1] );
+		}
+		/*
 		 * From https://www.php.net/manual/en/datetime.format.php:
 		 *
 		 * n - Numeric representation of a month, without leading zeros.
@@ -236,6 +343,13 @@ class WP_SQLite_PDO_User_Defined_Functions {
 	 */
 	public function year( $field ) {
 		/*
+		 * MySQL returns 0 for YEAR('0000-00-00'). PHP's strtotime()
+		 * can't parse zero dates, so we extract the year directly.
+		 */
+		if ( preg_match( '/^(\d{4})-\d{2}/', $field, $matches ) ) {
+			return intval( $matches[1] );
+		}
+		/*
 		 * From https://www.php.net/manual/en/datetime.format.php:
 		 *
 		 * Y - A full numeric representation of a year, 4 digits.
@@ -251,6 +365,14 @@ class WP_SQLite_PDO_User_Defined_Functions {
 	 * @return string Representing the number of the day of the month from 1 and 31.
 	 */
 	public function day( $field ) {
+		/*
+		 * MySQL returns 0 for DAY('0000-00-00') and for dates with
+		 * zero day parts like '2020-01-00'. PHP's strtotime() can't
+		 * parse these, so we extract the day directly from the string.
+		 */
+		if ( preg_match( '/^\d{4}-\d{2}-(\d{2})/', $field, $matches ) ) {
+			return intval( $matches[1] );
+		}
 		/*
 		 * From https://www.php.net/manual/en/datetime.format.php:
 		 *
@@ -440,21 +562,6 @@ class WP_SQLite_PDO_User_Defined_Functions {
 	 */
 	public function isnull( $field ) {
 		return is_null( $field );
-	}
-
-	/**
-	 * Method to emulate MySQL IF() function.
-	 *
-	 * As 'IF' is a reserved word for PHP, function name must be changed.
-	 *
-	 * @param mixed $expression The statement to be evaluated as true or false.
-	 * @param mixed $truthy     Statement or value returned if $expression is true.
-	 * @param mixed $falsy      Statement or value returned if $expression is false.
-	 *
-	 * @return mixed
-	 */
-	public function _if( $expression, $truthy, $falsy ) {
-		return ( true === $expression ) ? $truthy : $falsy;
 	}
 
 	/**
@@ -650,6 +757,44 @@ class WP_SQLite_PDO_User_Defined_Functions {
 	}
 
 	/**
+	 * Method to emulate MySQL FROM_BASE64() function.
+	 *
+	 * Takes a base64-encoded string and returns the decoded result as a binary
+	 * string. Returns NULL if the argument is NULL or is not a valid base64 string.
+	 *
+	 * @param string|null $str The base64-encoded string.
+	 *
+	 * @return string|null Decoded binary string, or NULL.
+	 */
+	public function from_base64( $str ) {
+		if ( null === $str ) {
+			return null;
+		}
+		$decoded = base64_decode( $str, true );
+		if ( false === $decoded ) {
+			return null;
+		}
+		return $decoded;
+	}
+
+	/**
+	 * Method to emulate MySQL TO_BASE64() function.
+	 *
+	 * Takes a string and returns a base64-encoded result.
+	 * Returns NULL if the argument is NULL.
+	 *
+	 * @param string|null $str The string to encode.
+	 *
+	 * @return string|null Base64-encoded string, or NULL.
+	 */
+	public function to_base64( $str ) {
+		if ( null === $str ) {
+			return null;
+		}
+		return base64_encode( $str );
+	}
+
+	/**
 	 * Method to emulate MySQL INET_NTOA() function.
 	 *
 	 * This function gets 4 or 8 bytes integer and turn it into the network address.
@@ -672,7 +817,7 @@ class WP_SQLite_PDO_User_Defined_Functions {
 	 * @return int long integer
 	 */
 	public function inet_aton( $addr ) {
-		return absint( ip2long( $addr ) );
+		return abs( (int) ip2long( $addr ) );
 	}
 
 	/**
@@ -758,5 +903,82 @@ class WP_SQLite_PDO_User_Defined_Functions {
 	 */
 	public function version() {
 		return '5.5';
+	}
+
+	/**
+	 * Method to emulate MySQL REVERSE() function.
+	 *
+	 * Reverse UTF-8 text by code point, matching MySQL behavior.
+	 *
+	 * @param string|null $str The string to reverse.
+	 *
+	 * @return string|null reversed string, or NULL.
+	 */
+	public function reverse( $str ) {
+		if ( null === $str ) {
+			return null;
+		}
+		if (
+			preg_match( '/[^\x00-\x7F]/', $str )
+			&& preg_match_all( '/./us', $str, $matches )
+		) {
+			return implode( '', array_reverse( $matches[0] ) );
+		}
+		return strrev( $str );
+	}
+
+	/**
+	 * A helper to convert a LIKE pattern to a GLOB pattern for "LIKE BINARY" support.
+
+	 * @TODO: Some of the MySQL string specifics described below are likely to
+	 *        affect also other patterns than just "LIKE BINARY". We should
+	 *        consider applying some of the conversions more broadly.
+	 *
+	 * @param string|null $pattern
+	 * @return string|null
+	 */
+	public function _helper_like_to_glob_pattern( $pattern ) {
+		if ( null === $pattern ) {
+			return null;
+		}
+
+		/*
+		 * 1. Escape characters that have special meaning in GLOB patterns.
+		 *
+		 * We need to:
+		 *  1. Escape "]" as "[]]" to avoid interpreting "[...]" as a character class.
+		 *  2. Escape "*" as "[*]" (must be after 1 to avoid being escaped).
+		 *  3. Escape "?" as "[?]" (must be after 1 to avoid being escaped).
+		 */
+		$pattern = str_replace( ']', '[]]', $pattern );
+		$pattern = str_replace( '*', '[*]', $pattern );
+		$pattern = str_replace( '?', '[?]', $pattern );
+
+		/*
+		 * 2. Convert LIKE wildcards to GLOB wildcards ("%" -> "*", "_" -> "?").
+		 *
+		 * We need to convert them only when they don't follow any backslashes,
+		 * or when they follow an even number of backslashes (as "\\" is "\").
+		 */
+		$pattern = preg_replace( '/(^|[^\\\\](?:\\\\{2})*)%/', '$1*', $pattern );
+		$pattern = preg_replace( '/(^|[^\\\\](?:\\\\{2})*)_/', '$1?', $pattern );
+
+		/*
+		 * 3. Unescape LIKE escape sequences.
+		 *
+		 * While in MySQL LIKE patterns, a backslash is usually used to escape
+		 * special characters ("%", "_", and "\"), it works with all characters.
+		 *
+		 * That is:
+		 *   SELECT '\\x' prints '\x', but LIKE '\\x' is equivalent to LIKE 'x'.
+		 *
+		 * This is true also for multi-byte characters:
+		 *   SELECT '\\©' prints '\©', but LIKE '\\©' is equivalent to LIKE '©'.
+		 *
+		 * Use "s" to include escaped newlines and omit "u" to preserve raw bytes.
+		 */
+		$pattern = preg_replace( '/\\\\(.)/s', '$1', $pattern );
+
+		return $pattern;
 	}
 }
