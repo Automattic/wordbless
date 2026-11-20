@@ -41,6 +41,10 @@ class Load {
 			}
 			define( 'DB_ENGINE', $db_engine );
 		}
+		// The SQLite driver bails without a database name.
+		if ( ! defined( 'DB_NAME' ) ) {
+			define( 'DB_NAME', 'wordbless' );
+		}
 		$_SERVER['SERVER_NAME'] = 'anything.example';
 		$_SERVER['HTTP_HOST']   = 'anything.example';
 

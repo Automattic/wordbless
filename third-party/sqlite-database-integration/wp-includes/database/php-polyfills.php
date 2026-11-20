@@ -1,8 +1,10 @@
 <?php
 /**
- * Polyfills for php 7 & 8 functions
+ * Polyfills for PHP 8.0 string functions.
  *
- * @package wp-sqlite-integration
+ * Implementation follows the Symfony polyfill-php80 package.
+ *
+ * @see https://github.com/symfony/polyfill-php80
  */
 
 if ( ! function_exists( 'str_starts_with' ) ) {
@@ -17,7 +19,7 @@ if ( ! function_exists( 'str_starts_with' ) ) {
 	 * @return bool
 	 */
 	function str_starts_with( string $haystack, string $needle ) {
-		return empty( $needle ) || 0 === strpos( $haystack, $needle );
+		return 0 === strncmp( $haystack, $needle, strlen( $needle ) );
 	}
 }
 
@@ -33,7 +35,7 @@ if ( ! function_exists( 'str_contains' ) ) {
 	 * @return bool
 	 */
 	function str_contains( string $haystack, string $needle ) {
-		return empty( $needle ) || false !== strpos( $haystack, $needle );
+		return '' === $needle || false !== strpos( $haystack, $needle );
 	}
 }
 
@@ -49,6 +51,16 @@ if ( ! function_exists( 'str_ends_with' ) ) {
 	 * @return bool
 	 */
 	function str_ends_with( string $haystack, string $needle ) {
-		return empty( $needle ) || substr( $haystack, -strlen( $needle ) === $needle );
+		if ( '' === $needle || $needle === $haystack ) {
+			return true;
+		}
+
+		if ( '' === $haystack ) {
+			return false;
+		}
+
+		$needle_length = strlen( $needle );
+
+		return $needle_length <= strlen( $haystack ) && 0 === substr_compare( $haystack, $needle, -$needle_length );
 	}
 }
