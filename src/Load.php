@@ -51,6 +51,10 @@ class Load {
 		global $table_prefix;
 		$table_prefix = 'wp_';
 
+		if ( DB_ENGINE === 'sqlite' ) {
+			Sqlite::preinit();
+		}
+
 		require ABSPATH . '/wp-settings.php';
 		require_once ABSPATH . 'wp-admin/includes/admin.php';
 		// UPLOADS is defined by the time we get here, via a bootstrap.php or the code block above.
